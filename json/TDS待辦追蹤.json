@@ -1,0 +1,186 @@
+{
+  "_說明": "TDS(Mirko/Ivano)未結事項追蹤。狀態:等TDS(紅)/等高玉(藍)/等客戶(橙)/觀察(灰)/完成。每週五小T彙整成英文週報草稿給Tina寄Mirko要求更新。",
+  "_更新": "2026-06-11",
+  "items": [
+    {
+      "id": 1,
+      "類別": "賠償處理",
+      "主旨": "啤酒櫃進水損壞理賠",
+      "ref": "26FD24003",
+      "狀態": "等高玉",
+      "動態": "6/11 Mirko已給裝櫃照片+保險證明,問哪一櫃受損",
+      "要求": "GJ to confirm damaged container no.; then TDS to proceed insurance claim",
+      "起始": "2026-06-11"
+    },
+    {
+      "id": 2,
+      "類別": "賠償處理",
+      "主旨": "G7冰淇淋破損80盒扣款(桂冠)",
+      "ref": "26IC0001",
+      "狀態": "等客戶",
+      "動態": "6/1 已轉驗收報告給Mirko;等桂冠告知扣款金額",
+      "要求": "Pending Laurel's deduction amount; TDS to confirm settlement method",
+      "起始": "2026-06-01"
+    },
+    {
+      "id": 3,
+      "類別": "賠償處理",
+      "主旨": "Yonca 損失追償+後續訂單",
+      "ref": "Yonca",
+      "狀態": "等高玉",
+      "動態": "6/5 視訊會議;Yonca PL葵花油 1.46€/瓶 CIF;Tina允諾推單",
+      "要求": "GJ to push the PL sunflower order as agreed",
+      "起始": "2026-06-05"
+    },
+    {
+      "id": 4,
+      "類別": "出貨文件",
+      "主旨": "26FP23020 文件全套重出(La Mole)",
+      "ref": "26FP23020",
+      "狀態": "等TDS",
+      "動態": "6/3 Mirko重出PL;CI仍缺;PL/COO品名重量先前全不符(Kao 5/19清單)",
+      "要求": "Provide corrected CI; confirm all docs consistent (names/GW/pallets/PZ-CFZ)",
+      "起始": "2026-05-19"
+    },
+    {
+      "id": 5,
+      "類別": "出貨文件",
+      "主旨": "26FP25011 松露:90g條碼修正+COO定稿",
+      "ref": "26FP25011",
+      "狀態": "等TDS",
+      "動態": "6/4 價格€1.85已更正(PI/CI);90g條碼仍錯;COO草稿未定",
+      "要求": "Correct 90g barcode in all docs; finalize COO",
+      "起始": "2026-06-04"
+    },
+    {
+      "id": 6,
+      "類別": "出貨文件",
+      "主旨": "SM-260306 白酒 COO 修訂",
+      "ref": "SM-260306",
+      "狀態": "等高玉",
+      "動態": "6/8 Mirko給修訂稿(Italy重複/delivery-to無法改)",
+      "要求": "GJ to confirm the revised COO draft or request changes",
+      "起始": "2026-06-03"
+    },
+    {
+      "id": 7,
+      "類別": "出貨文件",
+      "主旨": "SMO-260318 橄欖油出貨文件(中元急單)",
+      "ref": "SMO-260318",
+      "狀態": "等TDS",
+      "動態": "PI 3/24已收;BL 4/25;CI/PL/COO/HC未到;6月底要到貨",
+      "要求": "Provide CI/PL/COO/HC urgently (Ghost Festival deadline end of June)",
+      "起始": "2026-04-25"
+    },
+    {
+      "id": 8,
+      "類別": "出貨文件",
+      "主旨": "26FP250013 Cirio 出貨文件",
+      "ref": "26FP250013",
+      "狀態": "等TDS",
+      "動態": "PI 4/7已簽;出貨文件未見",
+      "要求": "Provide shipping docs (CI/PL/BL/COO)",
+      "起始": "2026-04-15"
+    },
+    {
+      "id": 9,
+      "類別": "出貨文件",
+      "主旨": "SM-260202 Menodiciotto 美廉冰文件",
+      "ref": "SM-260202",
+      "狀態": "等TDS",
+      "動態": "PI 3/30已收;出貨文件未見",
+      "要求": "Provide shipping docs",
+      "起始": "2026-04-25"
+    },
+    {
+      "id": 10,
+      "類別": "出貨文件",
+      "主旨": "SM-260378 Selme EVOO 標籤+文件",
+      "ref": "SM-260378",
+      "狀態": "等TDS",
+      "動態": "標籤確認中;出貨文件未見",
+      "要求": "Confirm labels; provide shipping docs",
+      "起始": "2026-04-30"
+    },
+    {
+      "id": 11,
+      "類別": "出貨文件",
+      "主旨": "26FP26004-1 茶葉空運 PI 簽回",
+      "ref": "26FP26004-1",
+      "狀態": "等TDS",
+      "動態": "PI待簽回,需機場名+效期",
+      "要求": "Sign back PI with departure airport and expiry dates",
+      "起始": "2026-05-15"
+    },
+    {
+      "id": 12,
+      "類別": "成分回覆",
+      "主旨": "Vicenzi 成分展開(三信)",
+      "ref": "Vicenzi",
+      "狀態": "等高玉",
+      "動態": "6/8 Mirko已給綠字回覆;三信審閱中",
+      "要求": "GJ/San-Hsin reviewing; may need further breakdown",
+      "起始": "2026-06-01"
+    },
+    {
+      "id": 13,
+      "類別": "成分回覆",
+      "主旨": "冷凍菠菜 COA+標籤(QA)",
+      "ref": "Frozen Spinach",
+      "狀態": "等高玉",
+      "動態": "6/9 Mirko給COA(E.coli/沙門/李斯特);QA Juno審核中",
+      "要求": "GJ QA reviewing COA; will revert on Chinese label",
+      "起始": "2026-06-04"
+    },
+    {
+      "id": 14,
+      "類別": "報價",
+      "主旨": "Zucchi 葵花/芥花油 vs Yonca 比較表",
+      "ref": "PL oil",
+      "狀態": "等TDS",
+      "動態": "5/29 Ivano給價目;Mirko說要做比較檔,未收到",
+      "要求": "Provide the Zucchi vs Yonca comparison file",
+      "起始": "2026-05-29"
+    },
+    {
+      "id": 15,
+      "類別": "報價",
+      "主旨": "Moscato d'Asti 利潤試算+產品資料",
+      "ref": "Manfredi",
+      "狀態": "等TDS",
+      "動態": "5/26 報價€2.80;Tina要求算margin+圖片+介紹;未收到",
+      "要求": "Provide margin calculation, product pictures and introduction",
+      "起始": "2026-05-26"
+    },
+    {
+      "id": 16,
+      "類別": "訂單",
+      "主旨": "大全聯秋酒:Prosecco PO補ID(西班牙酒已放棄)",
+      "ref": "26FP30016",
+      "狀態": "等客戶",
+      "動態": "西班牙酒26FP30015確定放棄(PXM無法配合MOQ300,Tina 6/11拍板);Prosecco PO待PXM補ID",
+      "要求": "26FP30015 Spanish wine is CANCELLED (MOQ not workable) — please inform the winery, no further action. 26FP30016 Prosecco: PXM to update PO with ID no.",
+      "起始": "2026-05-22"
+    },
+    {
+      "id": 17,
+      "類別": "貨款對帳",
+      "主旨": "TDS對帳尾款 IT251208(€5,571)",
+      "ref": "IT251208",
+      "狀態": "等客戶",
+      "動態": "對帳已完成(高玉淨欠€13,275);IT251208待東森付款後結算",
+      "要求": "Settle after Eastern Home Shopping payment received",
+      "起始": "2026-03-08"
+    },
+    {
+      "id": 18,
+      "類別": "訂單",
+      "主旨": "Prisma Egypt RAW 首單",
+      "ref": "Prisma",
+      "狀態": "等高玉",
+      "動態": "6/8 Ivano稱本週下單;Prisma備妥",
+      "要求": "GJ to place the first order",
+      "起始": "2026-06-08"
+    }
+  ]
+}

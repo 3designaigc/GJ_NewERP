@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>高玉ERP備案</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <img src="json/gj_logo.png" alt="高玉" />
+          <div>
+            <h1>高玉ERP備案</h1>
+            <p>資料備援原型</p>
+          </div>
+        </div>
+        <nav class="nav" aria-label="主要功能">
+          <button class="nav-item active" data-view="dashboard">總覽</button>
+          <button class="nav-item" data-view="products">商品</button>
+          <button class="nav-item" data-view="suppliers">供應商</button>
+          <button class="nav-item" data-view="cashflow">現金流</button>
+          <button class="nav-item" data-view="tracking">PO追蹤</button>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <h2 id="viewTitle">總覽</h2>
+            <p id="viewSubtitle">讀取 JSON 資料中</p>
+          </div>
+          <div class="status" id="loadStatus">Loading</div>
+        </header>
+
+        <section id="dashboardView" class="view active">
+          <div class="metric-grid" id="metricGrid"></div>
+          <div class="content-grid">
+            <section class="panel">
+              <div class="panel-head">
+                <h3>交易模式分布</h3>
+              </div>
+              <div id="tradeModeList" class="bar-list"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-head">
+                <h3>待辦狀態</h3>
+              </div>
+              <div id="taskStatusList" class="bar-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="productsView" class="view">
+          <div class="toolbar">
+            <input id="productSearch" type="search" placeholder="搜尋品名、供應商、EAN、類別" />
+            <select id="productTypeFilter"></select>
+            <select id="productStatusFilter"></select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>供應商編號</th>
+                  <th>中文品名</th>
+                  <th>英文品名</th>
+                  <th>供應商</th>
+                  <th>型態</th>
+                  <th>產品類別</th>
+                  <th>幣別</th>
+                  <th class="num">成本價</th>
+                  <th>狀態</th>
+                </tr>
+              </thead>
+              <tbody id="productsBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="suppliersView" class="view">
+          <div class="toolbar">
+            <input id="supplierSearch" type="search" placeholder="搜尋供應商、編號、國家、類別" />
+            <select id="supplierTypeFilter"></select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>供應商編號</th>
+                  <th>供應商名稱</th>
+                  <th>型態</th>
+                  <th>生產國/地區</th>
+                  <th>幣別</th>
+                  <th>交易模式</th>
+                  <th>付款條件</th>
+                  <th class="num">產品筆數</th>
+                </tr>
+              </thead>
+              <tbody id="suppliersBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="cashflowView" class="view">
+          <div class="toolbar">
+            <input id="cashflowSearch" type="search" placeholder="搜尋 PO、供應商、客戶、商品" />
+            <select id="cashflowTypeFilter"></select>
+            <select id="cashflowCurrencyFilter"></select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>PO</th>
+                  <th>月份</th>
+                  <th>類型</th>
+                  <th>對象</th>
+                  <th>供應商</th>
+                  <th>商品</th>
+                  <th>幣別</th>
+                  <th class="num">外幣</th>
+                  <th class="num">台幣</th>
+                  <th>預估日</th>
+                  <th>確認</th>
+                </tr>
+              </thead>
+              <tbody id="cashflowBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="trackingView" class="view">
+          <div class="toolbar">
+            <input id="trackingSearch" type="search" placeholder="搜尋 PO、供應商、產品、船名、待辦" />
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>PO / Ref</th>
+                  <th>來源</th>
+                  <th>供應商 / 類別</th>
+                  <th>產品 / 主旨</th>
+                  <th>狀態 / 文件</th>
+                  <th>窗口 / 船名</th>
+                  <th>備註 / 要求</th>
+                </tr>
+              </thead>
+              <tbody id="trackingBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="assets/app.js"></script>
+  </body>
+</html>
