@@ -7,7 +7,35 @@
     <link rel="stylesheet" href="assets/styles.css" />
   </head>
   <body>
-    <div class="app-shell">
+    <section class="login-screen" id="loginScreen">
+      <form class="login-panel" id="loginForm">
+        <div class="brand login-brand">
+          <img src="json/gj_logo.png" alt="高玉" />
+          <div>
+            <h1>高玉ERP備案</h1>
+            <p>權限登入</p>
+          </div>
+        </div>
+        <label>
+          使用者名稱
+          <input id="username" type="text" autocomplete="username" required />
+        </label>
+        <label>
+          使用者密碼
+          <input id="password" type="password" autocomplete="current-password" required />
+        </label>
+        <button type="submit" class="primary-btn">登入</button>
+        <p class="login-error" id="loginError"></p>
+        <div class="login-hint">
+          <strong>測試帳號</strong>
+          <span>業務：sales / gj-sales-2026</span>
+          <span>業務主管：manager / gj-manager-2026</span>
+          <span>本人：owner / gj-owner-2026</span>
+        </div>
+      </form>
+    </section>
+
+    <div class="app-shell hidden" id="appShell">
       <aside class="sidebar">
         <div class="brand">
           <img src="json/gj_logo.png" alt="高玉" />
@@ -20,7 +48,7 @@
           <button class="nav-item active" data-view="dashboard">總覽</button>
           <button class="nav-item" data-view="products">商品</button>
           <button class="nav-item" data-view="suppliers">供應商</button>
-          <button class="nav-item" data-view="cashflow">現金流</button>
+          <button class="nav-item" data-view="cashflow" data-permission="cashflow">現金流</button>
           <button class="nav-item" data-view="tracking">PO追蹤</button>
         </nav>
       </aside>
@@ -31,7 +59,11 @@
             <h2 id="viewTitle">總覽</h2>
             <p id="viewSubtitle">讀取 JSON 資料中</p>
           </div>
-          <div class="status" id="loadStatus">Loading</div>
+          <div class="top-actions">
+            <div class="user-chip" id="userChip">未登入</div>
+            <button class="logout-btn" id="logoutBtn" type="button">登出</button>
+            <div class="status" id="loadStatus">Loading</div>
+          </div>
         </header>
 
         <section id="dashboardView" class="view active">

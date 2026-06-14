@@ -7,6 +7,46 @@ const state = {
   docChecks: [],
   docTracks: [],
   shipments: [],
+  currentUser: null,
+};
+
+const users = {
+  sales: {
+    password: "gj-sales-2026",
+    name: "業務",
+    role: "sales",
+    roleLabel: "業務",
+    permissions: {
+      costs: false,
+      cashflow: false,
+      supplierSensitive: false,
+      tracking: true,
+    },
+  },
+  manager: {
+    password: "gj-manager-2026",
+    name: "業務主管",
+    role: "manager",
+    roleLabel: "業務主管",
+    permissions: {
+      costs: true,
+      cashflow: true,
+      supplierSensitive: false,
+      tracking: true,
+    },
+  },
+  owner: {
+    password: "gj-owner-2026",
+    name: "本人",
+    role: "owner",
+    roleLabel: "本人",
+    permissions: {
+      costs: true,
+      cashflow: true,
+      supplierSensitive: true,
+      tracking: true,
+    },
+  },
 };
 
 const files = {
@@ -29,6 +69,14 @@ const viewMeta = {
 };
 
 const $ = (id) => document.getElementById(id);
+
+function can(permission) {
+  return Boolean(state.currentUser?.permissions?.[permission]);
+}
+
+function mask(value) {
+  return can("costs") ? value : "權限不足";
+}
 
 function text(value) {
   if (value === null || value === undefined || value === "") return "—";
@@ -128,16 +176,18 @@ async function loadData() {
 function renderDashboard() {
   const payable = state.cashflow.filter((row) => row.type === "應付").reduce((sum, row) => sum + Number(row.twd_amt || 0), 0);
   const receivable = state.cashflow.filter((row) => row.type === "應收").reduce((sum, row) => sum + Number(row.twd_amt || 0), 0);
-  $("metricGrid").innerHTML = [
+  const metrics = [
     ["商品", state.products.length],
     ["供應商", state.suppliers.length],
-    ["現金流", state.cashflow.length],
     ["PO追蹤", state.docChecks.length + state.docTracks.length + state.shipments.length],
-    ["應收台幣", money(receivable)],
-    ["應付台幣", money(payable)],
     ["TDS待辦", state.tasks.length],
     ["商品技術", Object.keys(state.productTech).length],
-  ]
+  ];
+  if (can("cashflow")) {
+    metrics.splice(2, 0, ["現金流", state.cashflow.length]);
+    metrics.push(["應收台幣", money(receivable)], ["應付台幣", money(payable)]);
+  }
+  $("metricGrid").innerHTML = metrics
     .map(([label, value]) => `<div class="metric"><span>${label}</span><strong>${value}</strong></div>`)
     .join("");
 
@@ -166,7 +216,7 @@ function renderProducts() {
           <td><span class="pill">${escapeHtml(row["型態"])}</span></td>
           <td>${escapeHtml(row["產品類別"])}</td>
           <td>${escapeHtml(row["幣別"])}</td>
-          <td class="num">${money(row["成本價"])}</td>
+          <td class="num">${escapeHtml(mask(money(row["成本價"])))}</td>
           <td>${escapeHtml(row["狀態"])}</td>
         </tr>
       `
@@ -201,6 +251,10 @@ function renderSuppliers() {
 }
 
 function renderCashflow() {
+  if (!can("cashflow")) {
+    $("cashflowBody").innerHTML = "";
+    return;
+  }
   const keyword = $("cashflowSearch").value;
   const type = $("cashflowTypeFilter").value;
   const currency = $("cashflowCurrencyFilter").value;
@@ -292,6 +346,7 @@ function renderTracking() {
 }
 
 function renderAll() {
+  applyPermissions();
   renderDashboard();
   renderProducts();
   renderSuppliers();
@@ -300,6 +355,9 @@ function renderAll() {
 }
 
 function setView(view) {
+  if (view === "cashflow" && !can("cashflow")) {
+    view = "dashboard";
+  }
   document.querySelectorAll(".nav-item").forEach((button) => button.classList.toggle("active", button.dataset.view === view));
   document.querySelectorAll(".view").forEach((section) => section.classList.remove("active"));
   $(`${view}View`).classList.add("active");
@@ -310,10 +368,55 @@ function setView(view) {
 
 function bindEvents() {
   document.querySelectorAll(".nav-item").forEach((button) => button.addEventListener("click", () => setView(button.dataset.view)));
+  $("loginForm").addEventListener("submit", handleLogin);
+  $("logoutBtn").addEventListener("click", logout);
   ["productSearch", "productTypeFilter", "productStatusFilter"].forEach((id) => $(id).addEventListener("input", renderProducts));
   ["supplierSearch", "supplierTypeFilter"].forEach((id) => $(id).addEventListener("input", renderSuppliers));
   ["cashflowSearch", "cashflowTypeFilter", "cashflowCurrencyFilter"].forEach((id) => $(id).addEventListener("input", renderCashflow));
   $("trackingSearch").addEventListener("input", renderTracking);
+}
+
+function applyPermissions() {
+  document.querySelectorAll("[data-permission]").forEach((element) => {
+    const permission = element.dataset.permission;
+    element.classList.toggle("hidden", !can(permission));
+  });
+  $("userChip").textContent = `${state.currentUser.name}｜${state.currentUser.roleLabel}`;
+}
+
+function handleLogin(event) {
+  event.preventDefault();
+  const username = $("username").value.trim();
+  const password = $("password").value;
+  const user = users[username];
+  if (!user || user.password !== password) {
+    $("loginError").textContent = "使用者名稱或密碼不正確";
+    return;
+  }
+  state.currentUser = { username, ...user };
+  sessionStorage.setItem("gj_erp_user", username);
+  $("loginError").textContent = "";
+  $("loginScreen").classList.add("hidden");
+  $("appShell").classList.remove("hidden");
+  renderAll();
+  setView("dashboard");
+}
+
+function logout() {
+  sessionStorage.removeItem("gj_erp_user");
+  state.currentUser = null;
+  $("appShell").classList.add("hidden");
+  $("loginScreen").classList.remove("hidden");
+  $("password").value = "";
+  $("username").focus();
+}
+
+function restoreLogin() {
+  const username = sessionStorage.getItem("gj_erp_user");
+  if (!username || !users[username]) return;
+  state.currentUser = { username, ...users[username] };
+  $("loginScreen").classList.add("hidden");
+  $("appShell").classList.remove("hidden");
 }
 
 async function init() {
@@ -325,7 +428,8 @@ async function init() {
     $("supplierTypeFilter").innerHTML = uniqueOptions(state.suppliers, "型態", "全部型態");
     $("cashflowTypeFilter").innerHTML = uniqueOptions(state.cashflow, "type", "全部類型");
     $("cashflowCurrencyFilter").innerHTML = uniqueOptions(state.cashflow, "currency", "全部幣別");
-    renderAll();
+    restoreLogin();
+    if (state.currentUser) renderAll();
     $("loadStatus").textContent = "資料已載入";
     $("loadStatus").className = "status ok";
     $("viewSubtitle").textContent = "主檔資料量、交易模式與待辦狀態";
