@@ -46,6 +46,7 @@
         </div>
         <nav class="nav" aria-label="主要功能">
           <button class="nav-item active" data-view="dashboard">總覽</button>
+          <button class="nav-item" data-view="salesQuote" data-permission="quote">業務報價</button>
           <button class="nav-item" data-view="products">商品</button>
           <button class="nav-item" data-view="suppliers" data-permission="suppliers">供應商</button>
           <button class="nav-item" data-view="orderAnalysis" data-permission="orderAnalysis">訂單分析</button>
@@ -83,6 +84,124 @@
                 <h3>待辦狀態</h3>
               </div>
               <div id="taskStatusList" class="bar-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="salesQuoteView" class="view">
+          <div class="sales-workspace">
+            <section class="panel quote-products-panel">
+              <div class="panel-head">
+                <h3>挑選商品</h3>
+                <span class="muted" id="quoteProductCount"></span>
+              </div>
+              <div class="toolbar quote-toolbar">
+                <input id="quoteProductSearch" type="search" placeholder="搜尋商品、供應商、EAN、規格" />
+                <select id="quoteTypeFilter"></select>
+                <select id="quoteSupplierFilter"></select>
+                <select id="quoteBasisFilter">
+                  <option value="FOREIGN">外幣報價</option>
+                  <option value="TWD_LANDED">台幣到倉價</option>
+                </select>
+              </div>
+              <div class="table-wrap quote-product-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>商品</th>
+                      <th>供應商</th>
+                      <th>規格</th>
+                      <th>EAN</th>
+                      <th class="num">報價</th>
+                      <th class="num">底線</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="quoteProductBody"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="quote-panel">
+              <div class="quote-mode-tabs" role="tablist" aria-label="報價與下單">
+                <button class="quote-mode active" type="button" data-quote-mode="quote">報價單</button>
+                <button class="quote-mode" type="button" data-quote-mode="order">下訂單</button>
+              </div>
+
+              <section class="panel quote-form-panel">
+                <div class="panel-head">
+                  <h3 id="quoteFormTitle">業務報價單</h3>
+                  <span class="pill" id="quoteStatusPill">草稿</span>
+                </div>
+                <div class="quote-form-grid">
+                  <label>
+                    客戶
+                    <select id="quoteCustomer">
+                      <option value="一般貿易客戶">一般貿易客戶</option>
+                      <option value="美廉">美廉</option>
+                      <option value="東森">東森</option>
+                      <option value="好市多專案">好市多專案</option>
+                      <option value="生活良好">生活良好</option>
+                    </select>
+                  </label>
+                  <label>
+                    客戶名稱
+                    <input id="quoteCustomerName" type="text" placeholder="輸入客戶抬頭或聯絡窗口" />
+                  </label>
+                  <label>
+                    報價幣別
+                    <select id="quoteBasis">
+                      <option value="FOREIGN">外幣報價</option>
+                      <option value="TWD_LANDED">台幣到倉價</option>
+                    </select>
+                  </label>
+                  <label>
+                    有效天數
+                    <input id="quoteValidDays" type="number" min="1" value="30" />
+                  </label>
+                </div>
+
+                <div class="quote-empty" id="quoteEmptyState">請從左側商品清單加入報價品項</div>
+                <div class="table-wrap quote-cart-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>商品</th>
+                        <th>供應商</th>
+                        <th class="num">箱數</th>
+                        <th class="num">單價</th>
+                        <th class="num">底線</th>
+                        <th class="num">小計</th>
+                        <th>狀態</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody id="quoteCartBody"></tbody>
+                  </table>
+                </div>
+
+                <div class="quote-summary">
+                  <section>
+                    <span>已選品項</span>
+                    <strong id="quoteLineCount">0</strong>
+                  </section>
+                  <section>
+                    <span>報價合計</span>
+                    <strong id="quoteGrandTotal">—</strong>
+                  </section>
+                  <section>
+                    <span>審核狀態</span>
+                    <strong id="quoteApprovalStatus">尚未選品</strong>
+                  </section>
+                </div>
+
+                <div class="quote-actions">
+                  <button class="secondary-btn" id="clearQuoteBtn" type="button">清空</button>
+                  <button class="secondary-btn" id="printQuoteBtn" type="button">產生報價單</button>
+                  <button class="primary-btn inline-primary" id="submitOrderBtn" type="button">送出訂單草稿</button>
+                </div>
+                <pre class="quote-output" id="quoteOutput"></pre>
+              </section>
             </section>
           </div>
         </section>

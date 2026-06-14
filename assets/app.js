@@ -13,6 +13,9 @@ const state = {
   transferDocumentRules: {},
   currentUser: null,
   salesQuoteMap: new Map(),
+  quoteCart: [],
+  quoteMode: "quote",
+  savedSalesOrders: [],
   procurementOrders: [],
   selectedProcurementOrderId: null,
 };
@@ -152,6 +155,7 @@ const procurementModeConfig = {
 
 const viewMeta = {
   dashboard: ["總覽", "主檔資料量、交易模式與待辦狀態"],
+  salesQuote: ["業務報價", "挑選商品、建立報價單並送出訂單草稿"],
   products: ["商品", "商品主檔、成本、狀態與報價基礎"],
   suppliers: ["供應商", "供應商條件、聯絡與付款基礎資料"],
   orderAnalysis: ["訂單分析", "PO、客戶、供應商、商品與預估日期"],
@@ -188,6 +192,34 @@ function visibleProducts() {
     return state.products.filter((row) => row["型態"] === "冷凍" || isCostcoProject(row));
   }
   return state.products;
+}
+
+function quoteBasisLabel(basis) {
+  return basis === "TWD_LANDED" ? "台幣到倉價" : "外幣報價";
+}
+
+function quoteCurrency(row, basis) {
+  return basis === "TWD_LANDED" ? "TWD" : currencyCode(row["幣別"]);
+}
+
+function quotePrice(row, basis) {
+  if (basis === "TWD_LANDED") {
+    return numberValue(row["台幣最低報價"]) || numberValue(row["台幣10%底線"]);
+  }
+  return numberValue(state.salesQuoteMap.get(productKey(row))) || numberValue(row["外幣10%底線"]);
+}
+
+function quoteFloor(row, basis) {
+  if (basis === "TWD_LANDED") return numberValue(row["台幣10%底線"]) || numberValue(row["台幣最低報價"]);
+  return numberValue(row["外幣10%底線"]);
+}
+
+function quoteCartTotal() {
+  return state.quoteCart.reduce((sum, item) => sum + item.cartons * item.price, 0);
+}
+
+function quoteCartCurrency() {
+  return state.quoteCart[0]?.currency || "USD";
 }
 
 function text(value) {
@@ -305,8 +337,21 @@ async function loadData() {
       .filter((row) => Array.isArray(row))
       .map((row) => [productKeyFromValues(row[0], row[2], row[4]), row[15]])
   );
-  state.procurementOrders = buildProcurementOrders();
+  state.savedSalesOrders = loadSavedSalesOrders();
+  state.procurementOrders = [...state.savedSalesOrders, ...buildProcurementOrders()];
   state.selectedProcurementOrderId = state.procurementOrders.find((order) => order.status === "approved")?.id || null;
+}
+
+function loadSavedSalesOrders() {
+  try {
+    return JSON.parse(localStorage.getItem("gj_sales_orders") || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveSalesOrders() {
+  localStorage.setItem("gj_sales_orders", JSON.stringify(state.savedSalesOrders.slice(0, 50)));
 }
 
 function buildProcurementOrders() {
@@ -530,6 +575,162 @@ function renderProducts() {
       `
     )
     .join("");
+}
+
+function quoteProductRows() {
+  const keyword = $("quoteProductSearch").value;
+  const type = $("quoteTypeFilter").value;
+  const supplier = $("quoteSupplierFilter").value;
+  const basis = $("quoteBasisFilter").value;
+  return visibleProducts()
+    .filter(
+      (row) =>
+        (!type || row["型態"] === type) &&
+        (!supplier || row["供應商"] === supplier) &&
+        quotePrice(row, basis) > 0 &&
+        includesAny(row, keyword, ["中文品名", "英文品名", "供應商", "EAN", "規格", "供應商編號"])
+    )
+    .slice(0, 80);
+}
+
+function renderSalesQuote() {
+  if (!can("quote")) return;
+  const basis = $("quoteBasisFilter").value;
+  const rows = quoteProductRows();
+  $("quoteProductCount").textContent = `${rows.length} 筆可選`;
+  $("quoteProductBody").innerHTML = rows
+    .map((row) => {
+      const key = productKey(row);
+      const price = quotePrice(row, basis);
+      const floor = quoteFloor(row, basis);
+      const currency = quoteCurrency(row, basis);
+      return `
+        <tr>
+          <td>
+            <strong>${escapeHtml(row["中文品名"])}</strong>
+            <span class="muted">${escapeHtml(row["英文品名"])}</span>
+          </td>
+          <td>${escapeHtml(row["供應商"])}</td>
+          <td>${escapeHtml(row["規格"])}</td>
+          <td>${escapeHtml(row["EAN"])}</td>
+          <td class="num">${escapeHtml(currency)} ${money(price)}</td>
+          <td class="num">${escapeHtml(currency)} ${money(floor)}</td>
+          <td><button class="small-btn" type="button" data-add-quote="${escapeHtml(key)}">加入</button></td>
+        </tr>
+      `;
+    })
+    .join("");
+  renderQuoteCart();
+}
+
+function renderQuoteCart() {
+  const hasItems = state.quoteCart.length > 0;
+  $("quoteEmptyState").classList.toggle("hidden", hasItems);
+  document.querySelector(".quote-cart-table").classList.toggle("hidden", !hasItems);
+  $("quoteFormTitle").textContent = state.quoteMode === "order" ? "業務訂單草稿" : "業務報價單";
+  document.querySelectorAll(".quote-mode").forEach((button) => button.classList.toggle("active", button.dataset.quoteMode === state.quoteMode));
+  $("quoteCartBody").innerHTML = state.quoteCart
+    .map((item, index) => {
+      const ok = item.price >= item.floor && item.floor > 0;
+      return `
+        <tr>
+          <td>
+            <strong>${escapeHtml(item.name)}</strong>
+            <span class="muted">${escapeHtml(item.englishName)}</span>
+          </td>
+          <td>${escapeHtml(item.supplier)}</td>
+          <td class="num"><input class="line-input num" data-cart-index="${index}" data-cart-field="cartons" type="number" min="1" value="${escapeHtml(item.cartons)}" /></td>
+          <td class="num"><input class="line-input num" data-cart-index="${index}" data-cart-field="price" type="number" min="0" step="0.01" value="${escapeHtml(item.price)}" /></td>
+          <td class="num">${escapeHtml(item.currency)} ${money(item.floor)}</td>
+          <td class="num">${escapeHtml(item.currency)} ${money(item.cartons * item.price)}</td>
+          <td><span class="pill ${ok ? "in" : "out"}">${ok ? "合規" : "待核准"}</span></td>
+          <td><button class="icon-btn" type="button" data-remove-quote="${index}" title="移除">×</button></td>
+        </tr>
+      `;
+    })
+    .join("");
+  const total = quoteCartTotal();
+  const allApproved = hasItems && state.quoteCart.every((item) => item.price >= item.floor && item.floor > 0);
+  $("quoteLineCount").textContent = state.quoteCart.length;
+  $("quoteGrandTotal").textContent = hasItems ? `${quoteCartCurrency()} ${money(total)}` : "—";
+  $("quoteApprovalStatus").textContent = !hasItems ? "尚未選品" : allApproved ? "符合底線，可送單" : "低於底線，需本人核准";
+  $("quoteStatusPill").textContent = state.quoteMode === "order" ? "訂單草稿" : "報價草稿";
+  $("quoteStatusPill").className = `pill ${allApproved ? "in" : "out"}`;
+}
+
+function addQuoteItem(key) {
+  const row = visibleProducts().find((product) => productKey(product) === key);
+  if (!row) return;
+  const basis = $("quoteBasisFilter").value;
+  $("quoteBasis").value = basis;
+  const currency = quoteCurrency(row, basis);
+  const existing = state.quoteCart.find((item) => item.key === key && item.basis === basis);
+  if (existing) {
+    existing.cartons += 1;
+    renderQuoteCart();
+    return;
+  }
+  state.quoteCart.push({
+    key,
+    basis,
+    currency,
+    product: row,
+    name: row["中文品名"],
+    englishName: row["英文品名"],
+    supplier: row["供應商"],
+    cartons: 1,
+    price: quotePrice(row, basis),
+    floor: quoteFloor(row, basis),
+  });
+  renderQuoteCart();
+}
+
+function quoteDocumentText() {
+  const customer = $("quoteCustomerName").value.trim() || $("quoteCustomer").value;
+  const validDays = $("quoteValidDays").value || "30";
+  const today = new Date().toISOString().slice(0, 10);
+  const lines = state.quoteCart.map((item, index) => {
+    const status = item.price >= item.floor && item.floor > 0 ? "合規" : "需本人核准";
+    return `${index + 1}. ${item.name}｜${item.supplier}｜${item.cartons}箱 x ${item.currency} ${money(item.price)} = ${item.currency} ${money(item.cartons * item.price)}｜${status}`;
+  });
+  return [
+    `高玉業務報價單`,
+    `日期：${today}`,
+    `客戶：${customer}`,
+    `報價別：${quoteBasisLabel($("quoteBasis").value)}`,
+    `有效天數：${validDays}`,
+    ``,
+    ...lines,
+    ``,
+    `合計：${quoteCartCurrency()} ${money(quoteCartTotal())}`,
+  ].join("\n");
+}
+
+function createOrderFromQuote() {
+  if (!state.quoteCart.length) return;
+  const customer = $("quoteCustomerName").value.trim() || $("quoteCustomer").value;
+  const orderId = `SO-${new Date().toISOString().slice(0, 10).replaceAll("-", "")}-${String(state.procurementOrders.length + 1).padStart(3, "0")}`;
+  const allApproved = state.quoteCart.every((item) => item.price >= item.floor && item.floor > 0);
+  const created = state.quoteCart.map((item, index) =>
+    createProcurementOrder({
+      id: `${orderId}-${index + 1}`,
+      customer,
+      channel: $("quoteCustomer").value,
+      quoteBasis: item.basis,
+      requestedPrice: item.price,
+      cartons: item.cartons,
+      product: item.product,
+      note: `由業務報價系統送出；${allApproved ? "符合底線" : "含低於底線品項，需本人核准"}。`,
+    })
+  );
+  state.procurementOrders = [...created.filter(Boolean), ...state.procurementOrders];
+  state.savedSalesOrders = [...created.filter(Boolean), ...state.savedSalesOrders];
+  saveSalesOrders();
+  state.selectedProcurementOrderId = created.find((order) => order?.status === "approved")?.id || created[0]?.id || state.selectedProcurementOrderId;
+  state.quoteMode = "order";
+  $("quoteOutput").textContent = [`已送出訂單草稿：${orderId}`, quoteDocumentText()].join("\n\n");
+  renderQuoteCart();
+  renderProcurement();
 }
 
 function renderSuppliers() {
@@ -911,6 +1112,7 @@ function renderPurchaseOrderDraft() {
 
 function renderAll() {
   renderDashboard();
+  renderSalesQuote();
   renderProducts();
   renderSuppliers();
   renderOrderAnalysis();
@@ -924,6 +1126,7 @@ function renderAll() {
 function setView(view) {
   if (
     (view === "cashflow" && !can("cashflow")) ||
+    (view === "salesQuote" && !can("quote")) ||
     (view === "orderAnalysis" && !can("orderAnalysis")) ||
     (view === "suppliers" && !can("suppliers")) ||
     (view === "procurement" && !can("procurement")) ||
@@ -945,11 +1148,59 @@ function bindEvents() {
   $("loginForm").addEventListener("submit", handleLogin);
   $("logoutBtn").addEventListener("click", logout);
   ["productSearch", "productTypeFilter", "productStatusFilter"].forEach((id) => $(id).addEventListener("input", renderProducts));
+  ["quoteProductSearch", "quoteTypeFilter", "quoteSupplierFilter"].forEach((id) => $(id).addEventListener("input", renderSalesQuote));
+  $("quoteBasisFilter").addEventListener("input", () => {
+    $("quoteBasis").value = $("quoteBasisFilter").value;
+    renderSalesQuote();
+  });
+  $("quoteBasis").addEventListener("input", renderQuoteCart);
+  ["quoteCustomer", "quoteCustomerName", "quoteValidDays"].forEach((id) => $(id).addEventListener("input", renderQuoteCart));
   ["supplierSearch", "supplierTypeFilter"].forEach((id) => $(id).addEventListener("input", renderSuppliers));
   ["orderSearch", "orderMonthFilter"].forEach((id) => $(id).addEventListener("input", renderOrderAnalysis));
   ["cashflowSearch", "cashflowTypeFilter", "cashflowCurrencyFilter"].forEach((id) => $(id).addEventListener("input", renderCashflow));
   $("trackingSearch").addEventListener("input", renderTracking);
+  bindSalesQuoteEvents();
   bindProcurementEvents();
+}
+
+function bindSalesQuoteEvents() {
+  $("salesQuoteView").addEventListener("click", (event) => {
+    const addButton = event.target.closest("[data-add-quote]");
+    if (addButton) {
+      addQuoteItem(addButton.dataset.addQuote);
+      return;
+    }
+    const removeButton = event.target.closest("[data-remove-quote]");
+    if (removeButton) {
+      state.quoteCart.splice(Number(removeButton.dataset.removeQuote), 1);
+      renderQuoteCart();
+      return;
+    }
+    const modeButton = event.target.closest("[data-quote-mode]");
+    if (modeButton) {
+      state.quoteMode = modeButton.dataset.quoteMode;
+      renderQuoteCart();
+    }
+  });
+  $("salesQuoteView").addEventListener("change", (event) => {
+    const input = event.target.closest("[data-cart-index]");
+    if (!input) return;
+    const item = state.quoteCart[Number(input.dataset.cartIndex)];
+    if (!item) return;
+    item[input.dataset.cartField] = Math.max(0, Number(input.value) || 0);
+    renderQuoteCart();
+  });
+  $("clearQuoteBtn").addEventListener("click", () => {
+    state.quoteCart = [];
+    $("quoteOutput").textContent = "";
+    renderQuoteCart();
+  });
+  $("printQuoteBtn").addEventListener("click", () => {
+    $("quoteOutput").textContent = quoteDocumentText();
+    state.quoteMode = "quote";
+    renderQuoteCart();
+  });
+  $("submitOrderBtn").addEventListener("click", createOrderFromQuote);
 }
 
 function bindProcurementEvents() {
@@ -983,6 +1234,8 @@ function bindProcurementEvents() {
 function populateFilters() {
   $("productTypeFilter").innerHTML = uniqueOptions(visibleProducts(), "型態", "全部型態");
   $("productStatusFilter").innerHTML = uniqueOptions(visibleProducts(), "狀態", "全部狀態");
+  $("quoteTypeFilter").innerHTML = uniqueOptions(visibleProducts(), "型態", "全部型態");
+  $("quoteSupplierFilter").innerHTML = uniqueOptions(visibleProducts(), "供應商", "全部供應商");
   $("supplierTypeFilter").innerHTML = uniqueOptions(state.suppliers, "型態", "全部型態");
   $("orderMonthFilter").innerHTML = uniqueOptions(state.cashflow, "ym", "全部月份");
   $("cashflowTypeFilter").innerHTML = uniqueOptions(state.cashflow, "type", "全部類型");

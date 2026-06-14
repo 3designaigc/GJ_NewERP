@@ -94,6 +94,41 @@ select {
   font-weight: 700;
 }
 
+.secondary-btn,
+.small-btn,
+.icon-btn {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  color: #26323b;
+  cursor: pointer;
+}
+
+.secondary-btn {
+  height: 38px;
+  padding: 0 12px;
+}
+
+.small-btn {
+  min-height: 30px;
+  padding: 0 10px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.icon-btn {
+  width: 30px;
+  height: 30px;
+  color: var(--danger);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.inline-primary {
+  width: auto;
+  padding: 0 14px;
+}
+
 .logout-btn {
   height: 36px;
   background: #26323b;
@@ -459,6 +494,164 @@ tbody tr:hover {
 
 .muted {
   color: var(--muted);
+}
+
+.sales-workspace {
+  display: grid;
+  grid-template-columns: minmax(520px, 1.15fr) minmax(430px, 0.85fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.quote-toolbar {
+  flex-wrap: wrap;
+}
+
+.quote-toolbar input {
+  min-width: 220px;
+}
+
+.quote-products-panel,
+.quote-form-panel {
+  min-height: calc(100vh - 132px);
+}
+
+.quote-product-table {
+  max-height: calc(100vh - 238px);
+}
+
+.quote-product-table table {
+  min-width: 840px;
+}
+
+.quote-product-table td strong,
+.quote-product-table td span {
+  display: block;
+}
+
+.quote-panel {
+  display: grid;
+  gap: 10px;
+}
+
+.quote-mode-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.quote-mode {
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  color: #46515f;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.quote-mode.active {
+  border-color: var(--accent);
+  background: #e8f5f2;
+  color: var(--accent);
+}
+
+.quote-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.quote-form-grid label {
+  display: grid;
+  gap: 5px;
+  color: #46515f;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.quote-form-grid input,
+.quote-form-grid select,
+.line-input {
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  padding: 0 9px;
+}
+
+.quote-empty {
+  border: 1px dashed #b8c7d5;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: var(--muted);
+  padding: 22px;
+  text-align: center;
+}
+
+.quote-cart-table {
+  max-height: 360px;
+  margin-top: 8px;
+}
+
+.quote-cart-table table {
+  min-width: 900px;
+}
+
+.line-input {
+  width: 86px;
+}
+
+.quote-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.quote-summary section {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #f8fafc;
+  padding: 10px;
+}
+
+.quote-summary span,
+.quote-summary strong {
+  display: block;
+}
+
+.quote-summary span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.quote-summary strong {
+  margin-top: 4px;
+  font-size: 16px;
+}
+
+.quote-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.quote-output {
+  min-height: 120px;
+  max-height: 260px;
+  overflow: auto;
+  margin: 10px 0 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #f8fafc;
+  color: #26323b;
+  font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  white-space: pre-wrap;
+  padding: 10px;
 }
 
 .procurement-layout {
