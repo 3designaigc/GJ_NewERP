@@ -49,6 +49,7 @@
           <button class="nav-item" data-view="products">商品</button>
           <button class="nav-item" data-view="suppliers" data-permission="suppliers">供應商</button>
           <button class="nav-item" data-view="orderAnalysis" data-permission="orderAnalysis">訂單分析</button>
+          <button class="nav-item" data-view="procurement" data-permission="procurement">國際採購</button>
           <button class="nav-item" data-view="cashflow" data-permission="cashflow">現金流</button>
           <button class="nav-item" data-view="tracking" data-permission="tracking">PO追蹤</button>
         </nav>
@@ -192,6 +193,37 @@
               </thead>
               <tbody id="cashflowBody"></tbody>
             </table>
+          </div>
+        </section>
+
+        <section id="procurementView" class="view">
+          <div class="procurement-layout">
+            <section class="panel procurement-queue">
+              <div class="panel-head">
+                <h3>業務訂單審核佇列</h3>
+                <span class="muted">合規訂單可拖入右側產生採購草稿</span>
+              </div>
+              <div class="queue-columns">
+                <div>
+                  <h4>可轉國際採購</h4>
+                  <div id="approvedOrderQueue" class="order-stack"></div>
+                </div>
+                <div>
+                  <h4>待本人核准</h4>
+                  <div id="approvalOrderQueue" class="order-stack"></div>
+                </div>
+              </div>
+            </section>
+
+            <section class="po-workspace">
+              <div class="po-drop-zone" id="poDropZone">
+                <div>
+                  <strong>採購訂單草稿區</strong>
+                  <span>拖入合規訂單，系統會帶入供應商、交易條件、箱數、價格與文件要求。</span>
+                </div>
+              </div>
+              <article class="purchase-order" id="purchaseOrderDraft"></article>
+            </section>
           </div>
         </section>
 

@@ -9,6 +9,8 @@ const state = {
   shipments: [],
   currentUser: null,
   salesQuoteMap: new Map(),
+  procurementOrders: [],
+  selectedProcurementOrderId: null,
 };
 
 const users = {
@@ -26,6 +28,7 @@ const users = {
       suppliers: false,
       supplierSensitive: false,
       tracking: false,
+      procurement: false,
       productScope: "frozen_or_costco",
     },
   },
@@ -43,6 +46,7 @@ const users = {
       suppliers: false,
       supplierSensitive: false,
       tracking: true,
+      procurement: true,
       productScope: "all",
     },
   },
@@ -60,6 +64,7 @@ const users = {
       suppliers: true,
       supplierSensitive: true,
       tracking: true,
+      procurement: true,
       productScope: "all",
     },
   },
@@ -82,6 +87,7 @@ const viewMeta = {
   products: ["商品", "商品主檔、成本、狀態與報價基礎"],
   suppliers: ["供應商", "供應商條件、聯絡與付款基礎資料"],
   orderAnalysis: ["訂單分析", "PO、客戶、供應商、商品與預估日期"],
+  procurement: ["國際採購", "業務下單合規審核、本人核准與國外採購訂單草稿"],
   cashflow: ["現金流", "應收、應付、PO 與預估日期"],
   tracking: ["PO追蹤", "文件核對、文件追蹤、船班與 TDS 待辦"],
 };
@@ -127,6 +133,19 @@ function money(value) {
   const num = Number(value);
   if (!Number.isFinite(num)) return text(value);
   return new Intl.NumberFormat("zh-TW", { maximumFractionDigits: 2 }).format(num);
+}
+
+function numberValue(value) {
+  const num = Number(value);
+  return Number.isFinite(num) ? num : 0;
+}
+
+function currencyCode(value) {
+  const normalized = String(value || "").toLowerCase();
+  if (normalized.includes("euro") || normalized.includes("eur")) return "EUR";
+  if (normalized.includes("usd")) return "USD";
+  if (normalized.includes("nt") || normalized.includes("twd") || normalized.includes("台")) return "TWD";
+  return value || "—";
 }
 
 function includesAny(row, keyword, fields) {
@@ -213,6 +232,74 @@ async function loadData() {
       .filter((row) => Array.isArray(row))
       .map((row) => [productKeyFromValues(row[0], row[2], row[4]), row[15]])
   );
+  state.procurementOrders = buildProcurementOrders();
+  state.selectedProcurementOrderId = state.procurementOrders.find((order) => order.status === "approved")?.id || null;
+}
+
+function buildProcurementOrders() {
+  const frozenTwd = state.products.find((row) => row["報價交易條件"] === "到倉價" && numberValue(row["台幣最低報價"]) > 0);
+  const foreign = state.products.find((row) => row["報價交易條件"] !== "到倉價" && numberValue(row["外幣10%底線"]) > 0);
+  const costco = state.products.find((row) => isCostcoProject(row)) || frozenTwd;
+  return [
+    createProcurementOrder({
+      id: "SO-2026-0614-001",
+      customer: "高玉冷凍通路",
+      channel: "冷凍品",
+      quoteBasis: "TWD_LANDED",
+      requestedPrice: numberValue(frozenTwd?.["台幣最低報價"]) + 2,
+      cartons: 120,
+      product: frozenTwd,
+      note: "價格符合台幣到倉底線，可直接進入國際採購。",
+    }),
+    createProcurementOrder({
+      id: "SO-2026-0614-002",
+      customer: "好市多專案",
+      channel: "好市多",
+      quoteBasis: "TWD_LANDED",
+      requestedPrice: Math.max(1, numberValue(costco?.["台幣10%底線"]) - 1),
+      cartons: 80,
+      product: costco,
+      note: "好市多專案低於底線，必須先由本人核准。",
+    }),
+    createProcurementOrder({
+      id: "SO-2026-0614-003",
+      customer: "一般貿易客戶",
+      channel: "全通路",
+      quoteBasis: "FOREIGN",
+      requestedPrice: numberValue(foreign?.["外幣10%底線"]) + 0.3,
+      cartons: 60,
+      product: foreign,
+      note: "外幣價格高於底線，可建立國外供應商訂單草稿。",
+    }),
+  ].filter(Boolean);
+}
+
+function createProcurementOrder(config) {
+  const row = config.product;
+  if (!row) return null;
+  const quoteBasis = config.quoteBasis;
+  const isTwd = quoteBasis === "TWD_LANDED";
+  const floor = isTwd ? numberValue(row["台幣10%底線"]) : numberValue(row["外幣10%底線"]);
+  const hasRequiredCost = !isTwd || numberValue(row["台幣總成本"]) > 0;
+  const channelRequiresTwd = ["好市多", "冷凍品"].includes(config.channel) || row["報價交易條件"] === "到倉價";
+  const usesAllowedBasis = !channelRequiresTwd || isTwd;
+  const priceOk = config.requestedPrice >= floor && floor > 0;
+  const status = priceOk && hasRequiredCost && usesAllowedBasis ? "approved" : "approval";
+  const reasons = [];
+  if (!priceOk) reasons.push("低於報價底線");
+  if (!hasRequiredCost) reasons.push("缺台幣到倉成本");
+  if (!usesAllowedBasis) reasons.push("此客戶/通路僅允許台幣到倉價");
+  return {
+    ...config,
+    product: row,
+    currency: isTwd ? "TWD" : currencyCode(row["幣別"]),
+    floor,
+    status,
+    reasons,
+    poNo: `GJ-PO-${config.id.split("-").slice(-1)[0]}`,
+    incoterms: row["報價交易條件"] || row["成本交易條件"] || "TBD",
+    payment: row["付款條件"] || "TBD",
+  };
 }
 
 function renderDashboard() {
@@ -428,12 +515,146 @@ function renderTracking() {
     .join("");
 }
 
+function renderProcurement() {
+  if (!can("procurement")) return;
+  const approved = state.procurementOrders.filter((order) => order.status === "approved");
+  const approval = state.procurementOrders.filter((order) => order.status === "approval");
+  $("approvedOrderQueue").innerHTML = approved.map(renderOrderCard).join("") || `<div class="empty-state">目前沒有可下單項目</div>`;
+  $("approvalOrderQueue").innerHTML = approval.map(renderOrderCard).join("") || `<div class="empty-state">目前沒有待核准項目</div>`;
+  renderPurchaseOrderDraft();
+}
+
+function renderOrderCard(order) {
+  const product = order.product;
+  const statusLabel = order.status === "approved" ? "合規可下單" : "待本人核准";
+  const reasonText = order.reasons.length ? order.reasons.join("、") : "通過公司報價規則";
+  return `
+    <button class="order-card ${order.status === "approval" ? "needs-approval" : ""}" type="button" draggable="${order.status === "approved"}" data-order-id="${escapeHtml(order.id)}">
+      <span class="order-status">${statusLabel}</span>
+      <strong>${escapeHtml(order.id)}</strong>
+      <span>${escapeHtml(order.customer)}｜${escapeHtml(order.channel)}</span>
+      <span>${escapeHtml(product["中文品名"])}</span>
+      <span class="order-price">${escapeHtml(order.currency)} ${money(order.requestedPrice)} / 底線 ${money(order.floor)}</span>
+      <small>${escapeHtml(reasonText)}</small>
+    </button>
+  `;
+}
+
+function selectedProcurementOrder() {
+  return state.procurementOrders.find((order) => order.id === state.selectedProcurementOrderId) || state.procurementOrders[0];
+}
+
+function renderPurchaseOrderDraft() {
+  const order = selectedProcurementOrder();
+  if (!order) {
+    $("purchaseOrderDraft").innerHTML = `<div class="empty-state">尚無可建立草稿的訂單</div>`;
+    return;
+  }
+  const product = order.product;
+  const cartons = numberValue(order.cartons);
+  const unitsPerCarton = numberValue(product["箱入數"]) || 1;
+  const totalUnits = cartons * unitsPerCarton;
+  const lineTotal = cartons * numberValue(order.requestedPrice);
+  const today = new Date().toISOString().slice(0, 10);
+  const canIssue = order.status === "approved";
+  $("purchaseOrderDraft").innerHTML = `
+    <div class="po-ribbon ${canIssue ? "ready" : "blocked"}">${canIssue ? "Ready for International Purchasing" : "Owner Approval Required"}</div>
+    <header class="po-header">
+      <div>
+        <p class="po-kicker">Purchase Order Draft</p>
+        <h3>國外供應商訂單草稿</h3>
+      </div>
+      <div class="po-number">
+        <span>PO No.</span>
+        <strong>${escapeHtml(order.poNo)}</strong>
+      </div>
+    </header>
+
+    <div class="po-parties">
+      <section>
+        <h4>Buyer</h4>
+        <p>Golden Jade / 高玉</p>
+        <p>Taiwan Import & Distribution</p>
+        <p>Order Request: ${escapeHtml(order.id)}</p>
+      </section>
+      <section>
+        <h4>Supplier</h4>
+        <p>${escapeHtml(product["供應商"])}</p>
+        <p>${escapeHtml(product["生產國"])}｜${escapeHtml(product["供應商編號"])}</p>
+        <p>Payment: ${escapeHtml(order.payment)}</p>
+      </section>
+      <section>
+        <h4>Terms</h4>
+        <p>Date: ${escapeHtml(today)}</p>
+        <p>Incoterms: ${escapeHtml(order.incoterms)}</p>
+        <p>Currency: ${escapeHtml(order.currency)}</p>
+      </section>
+    </div>
+
+    <table class="po-lines">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>EAN</th>
+          <th>Spec</th>
+          <th class="num">Cartons</th>
+          <th class="num">Units</th>
+          <th class="num">Unit/Carton</th>
+          <th class="num">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <strong>${escapeHtml(product["英文品名"] || product["中文品名"])}</strong>
+            <span>${escapeHtml(product["中文品名"])}</span>
+          </td>
+          <td>${escapeHtml(product["EAN"])}</td>
+          <td>${escapeHtml(product["規格"])}</td>
+          <td class="num">${money(cartons)}</td>
+          <td class="num">${money(totalUnits)}</td>
+          <td class="num">${escapeHtml(order.currency)} ${money(order.requestedPrice)}</td>
+          <td class="num">${escapeHtml(order.currency)} ${money(lineTotal)}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="po-bottom">
+      <section>
+        <h4>文件與出貨要求</h4>
+        <ul>
+          <li>PI 價格、品名、規格、箱數需與本草稿一致。</li>
+          <li>出貨前提供 CI、PL、COO、HC / COA；出貨後補 B/L。</li>
+          <li>冷凍品需確認溫層、BBD、箱/板與到港文件版本。</li>
+        </ul>
+      </section>
+      <section>
+        <h4>審核狀態</h4>
+        <p>${escapeHtml(order.note)}</p>
+        <p>系統檢查：${escapeHtml(order.reasons.length ? order.reasons.join("、") : "符合底線與通路規則")}</p>
+      </section>
+      <section class="po-total">
+        <span>Total</span>
+        <strong>${escapeHtml(order.currency)} ${money(lineTotal)}</strong>
+      </section>
+    </div>
+
+    <div class="approval-grid">
+      <div>業務送單</div>
+      <div>本人核准</div>
+      <div>國際採購</div>
+      <div>文件核對</div>
+    </div>
+  `;
+}
+
 function renderAll() {
   renderDashboard();
   renderProducts();
   renderSuppliers();
   renderOrderAnalysis();
   renderCashflow();
+  renderProcurement();
   renderTracking();
   applyPermissions();
 }
@@ -443,6 +664,7 @@ function setView(view) {
     (view === "cashflow" && !can("cashflow")) ||
     (view === "orderAnalysis" && !can("orderAnalysis")) ||
     (view === "suppliers" && !can("suppliers")) ||
+    (view === "procurement" && !can("procurement")) ||
     (view === "tracking" && !can("tracking"))
   ) {
     view = "dashboard";
@@ -464,6 +686,35 @@ function bindEvents() {
   ["orderSearch", "orderMonthFilter"].forEach((id) => $(id).addEventListener("input", renderOrderAnalysis));
   ["cashflowSearch", "cashflowTypeFilter", "cashflowCurrencyFilter"].forEach((id) => $(id).addEventListener("input", renderCashflow));
   $("trackingSearch").addEventListener("input", renderTracking);
+  bindProcurementEvents();
+}
+
+function bindProcurementEvents() {
+  $("procurementView").addEventListener("click", (event) => {
+    const card = event.target.closest("[data-order-id]");
+    if (!card) return;
+    state.selectedProcurementOrderId = card.dataset.orderId;
+    renderPurchaseOrderDraft();
+  });
+  $("procurementView").addEventListener("dragstart", (event) => {
+    const card = event.target.closest("[data-order-id]");
+    if (!card || card.getAttribute("draggable") !== "true") return;
+    event.dataTransfer.setData("text/plain", card.dataset.orderId);
+  });
+  $("poDropZone").addEventListener("dragover", (event) => {
+    event.preventDefault();
+    $("poDropZone").classList.add("drag-over");
+  });
+  $("poDropZone").addEventListener("dragleave", () => $("poDropZone").classList.remove("drag-over"));
+  $("poDropZone").addEventListener("drop", (event) => {
+    event.preventDefault();
+    $("poDropZone").classList.remove("drag-over");
+    const orderId = event.dataTransfer.getData("text/plain");
+    const order = state.procurementOrders.find((item) => item.id === orderId);
+    if (!order || order.status !== "approved") return;
+    state.selectedProcurementOrderId = orderId;
+    renderPurchaseOrderDraft();
+  });
 }
 
 function populateFilters() {
