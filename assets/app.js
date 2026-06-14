@@ -264,6 +264,10 @@ function renderProducts() {
           <td class="num" data-column="cost">${escapeHtml(mask(money(row["成本價"])))}</td>
           <td class="num" data-column="quote">${can("quote") ? money(state.salesQuoteMap.get(productKey(row))) : "權限不足"}</td>
           <td class="num" data-column="quoteFloor">${can("quoteFloor") ? money(row["外幣10%底線"]) : "權限不足"}</td>
+          <td class="num" data-column="cost">${can("costs") ? money(row["台幣總成本"]) : "權限不足"}</td>
+          <td class="num" data-column="quote">${can("quote") ? money(row["台幣最低報價"]) : "權限不足"}</td>
+          <td class="num" data-column="quoteFloor">${can("quoteFloor") ? money(row["台幣10%底線"]) : "權限不足"}</td>
+          <td data-column="quoteFloor">${can("quoteFloor") ? escapeHtml(row["台幣價來源"]) : "權限不足"}</td>
           <td>${escapeHtml(row["狀態"])}</td>
         </tr>
       `
