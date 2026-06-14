@@ -52,6 +52,7 @@
           <button class="nav-item" data-view="procurement" data-permission="procurement">國際採購</button>
           <button class="nav-item" data-view="cashflow" data-permission="cashflow">現金流</button>
           <button class="nav-item" data-view="tracking" data-permission="tracking">PO追蹤</button>
+          <button class="nav-item" data-view="documentArchive" data-permission="documentArchive">文件歸檔</button>
         </nav>
       </aside>
 
@@ -246,6 +247,64 @@
               </thead>
               <tbody id="trackingBody"></tbody>
             </table>
+          </div>
+        </section>
+
+        <section id="documentArchiveView" class="view">
+          <div class="archive-layout">
+            <section class="panel">
+              <div class="panel-head">
+                <h3>訂單文件歸檔規則</h3>
+                <span class="muted" id="archiveRootStatus"></span>
+              </div>
+              <div class="archive-folder" id="archiveFolderTemplate"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-head">
+                <h3>文件狀態流程</h3>
+              </div>
+              <div class="status-flow" id="archiveStatusFlow"></div>
+            </section>
+          </div>
+
+          <div class="content-grid archive-grid">
+            <section class="panel">
+              <div class="panel-head">
+                <h3>必備文件與核對欄位</h3>
+              </div>
+              <div class="table-wrap archive-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>文件</th>
+                      <th>階段</th>
+                      <th>完成前置</th>
+                      <th>核對欄位</th>
+                    </tr>
+                  </thead>
+                  <tbody id="archiveDocumentBody"></tbody>
+                </table>
+              </div>
+            </section>
+            <section class="panel">
+              <div class="panel-head">
+                <h3>雲端資料夾待處理清單</h3>
+              </div>
+              <div class="table-wrap archive-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>訂單</th>
+                      <th>供應商 / 客戶</th>
+                      <th>狀態</th>
+                      <th>缺件</th>
+                      <th>備註</th>
+                    </tr>
+                  </thead>
+                  <tbody id="archiveSampleBody"></tbody>
+                </table>
+              </div>
+            </section>
           </div>
         </section>
       </main>

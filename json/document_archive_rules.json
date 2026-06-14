@@ -1,0 +1,126 @@
+{
+  "_說明": "訂單文件歸檔與文件追蹤規則。ERP 用此檔顯示文件狀態、Drive 資料夾規範與必備文件清單。",
+  "_更新": "2026-06-15",
+  "drive_root": {
+    "name": "供應鏈 / 訂單文件",
+    "status": "等待Google Drive資料夾連結或Folder ID",
+    "visible_examples": [
+      "..已完成（收款流程結束）",
+      "25OL0004",
+      "25OL0005",
+      "26IC0001-G7冰淇淋_桂冠",
+      "SM260414-26FA0004",
+      "SM260415-26FA0005",
+      "SM260435-26FA0006"
+    ]
+  },
+  "folder_template": {
+    "order_folder": "{PO或訂單號}-{供應商}-{客戶}",
+    "subfolders": [
+      "00_採購單_PO與核准紀錄",
+      "01_PI_ProformaInvoice",
+      "02_CI_CommercialInvoice",
+      "03_PL_PackingList",
+      "04_COO_產地證明",
+      "05_HC_COA_衛生證明與分析報告",
+      "06_BL_提單",
+      "07_船班與報關",
+      "08_修正版與往來紀錄",
+      "99_已完成歸檔"
+    ],
+    "completed_folder": "..已完成（收款流程結束）"
+  },
+  "required_documents": [
+    {
+      "code": "PO",
+      "name": "Purchase Order / 採購單",
+      "stage": "下單",
+      "required_before": "送供應商或TDS下單",
+      "check_fields": ["PO號", "供應商", "客戶", "交易模式", "付款條件", "商品明細", "數量", "單價", "總額"]
+    },
+    {
+      "code": "PI",
+      "name": "Proforma Invoice / 形式發票",
+      "stage": "PI核對",
+      "required_before": "轉正式文件追蹤",
+      "check_fields": ["品名", "規格", "數量", "箱數", "單價", "總額", "幣別", "Incoterms", "付款條件"]
+    },
+    {
+      "code": "CI",
+      "name": "Commercial Invoice / 商業發票",
+      "stage": "出貨前",
+      "required_before": "報關",
+      "check_fields": ["品名", "數量", "單價", "總額", "產地", "收貨人", "Invoice No."]
+    },
+    {
+      "code": "PL",
+      "name": "Packing List / 裝箱單",
+      "stage": "出貨前",
+      "required_before": "報關與倉儲安排",
+      "check_fields": ["箱數", "箱入數", "Gross weight", "Net weight", "棧板數", "尺寸", "批號"]
+    },
+    {
+      "code": "COO",
+      "name": "Certificate of Origin / 產地證明",
+      "stage": "出貨前",
+      "required_before": "報關",
+      "check_fields": ["產地", "供應商", "收貨人", "品名", "重量", "發證單位"]
+    },
+    {
+      "code": "HC",
+      "name": "Health Certificate / 衛生證明",
+      "stage": "出貨前",
+      "required_before": "食品進口報關",
+      "check_fields": ["品名", "產地", "製造商", "批號", "效期", "衛生證明號"]
+    },
+    {
+      "code": "COA",
+      "name": "Certificate of Analysis / 分析報告",
+      "stage": "出貨前",
+      "required_before": "品質文件歸檔",
+      "check_fields": ["批號", "檢驗項目", "結果", "日期", "製造商"]
+    },
+    {
+      "code": "BL",
+      "name": "Bill of Lading / 提單",
+      "stage": "出貨後",
+      "required_before": "付款節點與船班追蹤",
+      "check_fields": ["B/L No.", "船名", "航次", "ETD", "ETA", "收貨人", "Notify party", "櫃號"]
+    }
+  ],
+  "status_flow": [
+    "待建立資料夾",
+    "待PI",
+    "PI核對中",
+    "PI通過",
+    "出貨文件待收",
+    "文件核對中",
+    "文件不符待修正",
+    "文件通過",
+    "船班追蹤中",
+    "收款流程結束",
+    "已完成歸檔"
+  ],
+  "archive_samples": [
+    {
+      "order_no": "25OL0004",
+      "supplier": "待雲端掃描",
+      "customer": "待雲端掃描",
+      "status": "待連結Google Drive",
+      "folder_name": "25OL0004",
+      "received": ["待掃描"],
+      "missing": ["PI", "CI", "PL", "COO", "HC/COA", "BL"],
+      "note": "截圖可見資料夾，尚未取得實際檔案清單"
+    },
+    {
+      "order_no": "26IC0001",
+      "supplier": "G7",
+      "customer": "桂冠",
+      "status": "待連結Google Drive",
+      "folder_name": "26IC0001-G7冰淇淋_桂冠",
+      "received": ["待掃描"],
+      "missing": ["PI", "CI", "PL", "COO", "HC/COA", "BL"],
+      "note": "G7走TDS/Feast模式，文件需比照透過TDS採購流程"
+    }
+  ]
+}

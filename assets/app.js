@@ -8,6 +8,7 @@ const state = {
   docTracks: [],
   shipments: [],
   tradeRules: {},
+  documentArchive: {},
   currentUser: null,
   salesQuoteMap: new Map(),
   procurementOrders: [],
@@ -30,6 +31,7 @@ const users = {
       supplierSensitive: false,
       tracking: false,
       procurement: false,
+      documentArchive: false,
       productScope: "frozen_or_costco",
     },
   },
@@ -48,6 +50,7 @@ const users = {
       supplierSensitive: false,
       tracking: true,
       procurement: true,
+      documentArchive: true,
       productScope: "all",
     },
   },
@@ -66,6 +69,7 @@ const users = {
       supplierSensitive: true,
       tracking: true,
       procurement: true,
+      documentArchive: true,
       productScope: "all",
     },
   },
@@ -82,6 +86,7 @@ const files = {
   docTracks: "json/文件追蹤.json",
   shipments: "json/船班追蹤.json",
   tradeRules: "json/交易模式對應.json",
+  documentArchive: "json/document_archive_rules.json",
 };
 
 const procurementModeConfig = {
@@ -149,6 +154,7 @@ const viewMeta = {
   procurement: ["國際採購", "業務下單合規審核、本人核准與國外採購訂單草稿"],
   cashflow: ["現金流", "應收、應付、PO 與預估日期"],
   tracking: ["PO追蹤", "文件核對、文件追蹤、船班與 TDS 待辦"],
+  documentArchive: ["文件歸檔", "出貨文件清單、雲端資料夾規範與歸檔狀態"],
 };
 
 const $ = (id) => document.getElementById(id);
@@ -287,6 +293,7 @@ async function loadData() {
   state.docTracks = objectMapToRows(loaded.docTracks, "文件追蹤");
   state.shipments = objectMapToRows(loaded.shipments, "船班");
   state.tradeRules = loaded.tradeRules || {};
+  state.documentArchive = loaded.documentArchive || {};
   state.salesQuoteMap = new Map(
     loaded.sales
       .filter((row) => Array.isArray(row))
@@ -672,6 +679,49 @@ function renderTracking() {
     .join("");
 }
 
+function renderDocumentArchive() {
+  if (!can("documentArchive")) return;
+  const archive = state.documentArchive || {};
+  const root = archive.drive_root || {};
+  const template = archive.folder_template || {};
+  $("archiveRootStatus").textContent = `${root.name || "訂單文件"}｜${root.status || "待設定"}`;
+  $("archiveFolderTemplate").innerHTML = `
+    <div class="folder-title">${escapeHtml(template.order_folder || "{PO}-{供應商}-{客戶}")}</div>
+    <div class="folder-list">
+      ${(template.subfolders || []).map((folder) => `<span>${escapeHtml(folder)}</span>`).join("")}
+    </div>
+    <p class="muted">完成後移入：${escapeHtml(template.completed_folder || "已完成歸檔")}</p>
+  `;
+  $("archiveStatusFlow").innerHTML = (archive.status_flow || [])
+    .map((status, index) => `<div><strong>${index + 1}</strong><span>${escapeHtml(status)}</span></div>`)
+    .join("");
+  $("archiveDocumentBody").innerHTML = (archive.required_documents || [])
+    .map(
+      (doc) => `
+        <tr>
+          <td><strong>${escapeHtml(doc.code)}</strong><br><span class="muted">${escapeHtml(doc.name)}</span></td>
+          <td>${escapeHtml(doc.stage)}</td>
+          <td>${escapeHtml(doc.required_before)}</td>
+          <td>${escapeHtml(doc.check_fields)}</td>
+        </tr>
+      `
+    )
+    .join("");
+  $("archiveSampleBody").innerHTML = (archive.archive_samples || [])
+    .map(
+      (row) => `
+        <tr>
+          <td><strong>${escapeHtml(row.order_no)}</strong><br><span class="muted">${escapeHtml(row.folder_name)}</span></td>
+          <td>${escapeHtml(row.supplier)}<br><span class="muted">${escapeHtml(row.customer)}</span></td>
+          <td><span class="pill out">${escapeHtml(row.status)}</span></td>
+          <td>${escapeHtml(row.missing)}</td>
+          <td>${escapeHtml(row.note)}</td>
+        </tr>
+      `
+    )
+    .join("");
+}
+
 function renderProcurement() {
   if (!can("procurement")) return;
   const approved = state.procurementOrders.filter((order) => order.status === "approved");
@@ -834,6 +884,7 @@ function renderAll() {
   renderCashflow();
   renderProcurement();
   renderTracking();
+  renderDocumentArchive();
   applyPermissions();
 }
 
@@ -843,7 +894,8 @@ function setView(view) {
     (view === "orderAnalysis" && !can("orderAnalysis")) ||
     (view === "suppliers" && !can("suppliers")) ||
     (view === "procurement" && !can("procurement")) ||
-    (view === "tracking" && !can("tracking"))
+    (view === "tracking" && !can("tracking")) ||
+    (view === "documentArchive" && !can("documentArchive"))
   ) {
     view = "dashboard";
   }
