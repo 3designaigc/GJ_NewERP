@@ -10,6 +10,7 @@ const state = {
   tradeRules: {},
   documentArchive: {},
   orderDocumentScan: {},
+  transferDocumentRules: {},
   currentUser: null,
   salesQuoteMap: new Map(),
   procurementOrders: [],
@@ -89,6 +90,7 @@ const files = {
   tradeRules: "json/交易模式對應.json",
   documentArchive: "json/document_archive_rules.json",
   orderDocumentScan: "json/order_document_scan.json",
+  transferDocumentRules: "json/transfer_document_rules.json",
 };
 
 const procurementModeConfig = {
@@ -297,6 +299,7 @@ async function loadData() {
   state.tradeRules = loaded.tradeRules || {};
   state.documentArchive = loaded.documentArchive || {};
   state.orderDocumentScan = loaded.orderDocumentScan || {};
+  state.transferDocumentRules = loaded.transferDocumentRules || {};
   state.salesQuoteMap = new Map(
     loaded.sales
       .filter((row) => Array.isArray(row))
@@ -685,6 +688,7 @@ function renderTracking() {
 function renderDocumentArchive() {
   if (!can("documentArchive")) return;
   const archive = state.documentArchive || {};
+  const transferRules = state.transferDocumentRules || {};
   const root = archive.drive_root || {};
   const template = archive.folder_template || {};
   $("archiveRootStatus").textContent = `${root.name || "訂單文件"}｜${root.status || "待設定"}`;
@@ -706,6 +710,30 @@ function renderDocumentArchive() {
           <td>${escapeHtml(doc.stage)}</td>
           <td>${escapeHtml(doc.required_before)}</td>
           <td>${escapeHtml(doc.check_fields)}</td>
+        </tr>
+      `
+    )
+    .join("");
+  const sample = transferRules.sample_order || {};
+  $("transferRuleSummary").textContent = `${sample.order_no || "待設定"}｜${sample.model || "轉單模式"}`;
+  $("transferFlow").innerHTML = (transferRules.transaction_chain || [])
+    .map(
+      (step) => `
+        <div>
+          <strong>${escapeHtml(step.from)} → ${escapeHtml(step.to)}</strong>
+          <span>${escapeHtml(step.document)}｜${escapeHtml(step.amount_rule)}</span>
+        </div>
+      `
+    )
+    .join("");
+  $("transferDocumentBody").innerHTML = (transferRules.documents || [])
+    .map(
+      (doc) => `
+        <tr>
+          <td><strong>${escapeHtml(doc.code)}</strong><br><span class="muted">${escapeHtml(doc.filename_pattern)}</span></td>
+          <td>${escapeHtml(doc.issuer)} → ${escapeHtml(doc.recipient)}</td>
+          <td>${escapeHtml(doc.amount_rule)}</td>
+          <td>${escapeHtml(doc.source_documents)}</td>
         </tr>
       `
     )

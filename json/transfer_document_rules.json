@@ -1,0 +1,210 @@
+{
+  "_說明": "轉單文件製作規則。依 Google Drive 訂單文件 SM260515-26FA0008 中檔名含小T的文件，以及同資料夾客戶PO、供應商PO、工廠PI比對建立。",
+  "_更新": "2026-06-15",
+  "sample_order": {
+    "folder": "SM260515-26FA0008",
+    "order_no": "SM-260515",
+    "gj_po_no": "26FA0008",
+    "supplier_pi_no": "PI 27133-26",
+    "model": "C類買進轉手 / NEXO留利 / Mas Choices供應商",
+    "trade_term": "CIF",
+    "from": "LAEM CHABANG, THAILAND",
+    "to": "PORT KEELUNG, TAIWAN",
+    "payment_customer_chain": "45 days after B/L copy",
+    "payment_supplier_chain": "30% deposit, 70% against documents",
+    "final_customer_amount_usd": 40752,
+    "nexo_reserve_usd": 450,
+    "gj_to_nexo_net_amount_usd": 40302,
+    "supplier_cost_amount_usd": 32805.4,
+    "actual_cartons": 1380,
+    "actual_pieces": 66240,
+    "note": "客戶PO原始數量可有增減允收；小T轉單文件以最終出貨/確認數量 700 + 680 = 1,380 CTNS 生成。"
+  },
+  "parties": {
+    "customer": {
+      "code": "SM",
+      "name": "SIMPLE MART PLUS CO., LTD.",
+      "role": "最終客戶 / 收貨人"
+    },
+    "intermediary": {
+      "code": "NEXO",
+      "name": "NEXO Resources Sdn Bhd",
+      "role": "客戶名義供應商與高玉買方"
+    },
+    "company": {
+      "code": "GJ",
+      "name": "Golden Jade Terre Co., Ltd",
+      "role": "高玉 / 對供應商採購並轉售給NEXO"
+    },
+    "supplier": {
+      "code": "MASCHOICES",
+      "name": "MAS CHOICES Corporation Ltd.",
+      "role": "國外供應商 / 工廠端"
+    }
+  },
+  "items": [
+    {
+      "gj_code": "NEW_TGO",
+      "barcode": "8857122685347",
+      "name_zh": "泰國MAS油漬鮪魚罐頭180g",
+      "name_en": "MAS White Meat (Tongol) Tuna Flakes in Oil Broth 180g",
+      "size": "180g",
+      "origin": "THAILAND",
+      "pcs_per_ctn": 48,
+      "qty_pcs": 33600,
+      "qty_ctn": 700,
+      "customer_ctn_price_usd": 30.24,
+      "supplier_ctn_price_usd": 24.25
+    },
+    {
+      "gj_code": "NEW_TGW",
+      "barcode": "8857122685415",
+      "name_zh": "泰國MAS水煮鮪魚罐頭180g",
+      "name_en": "MAS White Meat (Tongol) Tuna Flakes in Brine Broth 180g",
+      "size": "180g",
+      "origin": "THAILAND",
+      "pcs_per_ctn": 48,
+      "qty_pcs": 32640,
+      "qty_ctn": 680,
+      "customer_ctn_price_usd": 28.8,
+      "supplier_ctn_price_usd": 23.28
+    }
+  ],
+  "transaction_chain": [
+    {
+      "from": "SIMPLE MART PLUS",
+      "to": "NEXO",
+      "document": "客戶PO",
+      "amount_rule": "客戶訂單是轉單來源；最終轉單文件以確認後數量與客戶單價產生，SM260515最終金額USD 40,752。"
+    },
+    {
+      "from": "NEXO",
+      "to": "Golden Jade",
+      "document": "PO_NEXO-GJ",
+      "amount_rule": "C類買進轉手需扣NEXO留利；SM260515大於USD10,000，折讓/留利USD 450，淨額USD 40,302。"
+    },
+    {
+      "from": "Golden Jade",
+      "to": "MAS CHOICES",
+      "document": "PO_GJ-Supplier",
+      "amount_rule": "依工廠成本價下單；SM260515成本USD 32,805.40，付款30%訂金、70%文件。"
+    },
+    {
+      "from": "MAS CHOICES",
+      "to": "Golden Jade",
+      "document": "Supplier PI",
+      "amount_rule": "供應商回簽PI作為高玉採購成本與出貨條件來源。"
+    },
+    {
+      "from": "Golden Jade",
+      "to": "NEXO",
+      "document": "PI/CI/PL_GJ-NEXO",
+      "amount_rule": "PI/CI使用扣除NEXO留利後金額；PL不列金額但買方為NEXO、收貨人為Simple Mart。"
+    },
+    {
+      "from": "NEXO",
+      "to": "SIMPLE MART PLUS",
+      "document": "PI/CI/PL_NEXO-SM",
+      "amount_rule": "PI/CI使用客戶金額，不扣NEXO留利；PL買方與收貨人皆為Simple Mart。"
+    }
+  ],
+  "nexo_profit_rule": {
+    "applies_to_trade_category": "C",
+    "threshold_usd": 10000,
+    "reserve_when_over_threshold_usd": 450,
+    "reserve_when_at_or_under_threshold_usd": 150,
+    "calculation_base": "客戶訂單最終確認金額",
+    "document_expression": "GJ-NEXO文件以Discount或等效折讓列示；NEXO-SM文件不得扣除該金額。",
+    "exception": "G7不套C類NEXO留利，走TDS/Feast模式。"
+  },
+  "documents": [
+    {
+      "code": "CUSTOMER_PO",
+      "filename_pattern": "PO-客戶給NEXO PO#{order_no}.pdf",
+      "issuer": "SIMPLE MART PLUS",
+      "recipient": "NEXO",
+      "amount_rule": "客戶原始訂單來源；可有允收差異，轉單前需確認最終數量。",
+      "source_documents": "客戶採購單"
+    },
+    {
+      "code": "PO_NEXO_GJ",
+      "filename_pattern": "PO_NEXO-GJ_{order_no}_小T.pdf",
+      "issuer": "NEXO",
+      "recipient": "Golden Jade",
+      "amount_rule": "使用客戶最終價格與數量，再列NEXO留利折讓；SM260515淨額USD 40,302。",
+      "source_documents": "客戶PO + NEXO留利規則 + 商品主檔"
+    },
+    {
+      "code": "PO_GJ_SUPPLIER",
+      "filename_pattern": "PO- GJ給工廠{supplier}.pdf",
+      "issuer": "Golden Jade",
+      "recipient": "MAS CHOICES",
+      "amount_rule": "使用供應商成本價，不使用客戶轉售價；SM260515成本USD 32,805.40。",
+      "source_documents": "供應商報價/PI + 商品主檔 + 最終數量"
+    },
+    {
+      "code": "SUPPLIER_PI",
+      "filename_pattern": "PI-工廠給GJ {supplier_pi_no}.pdf",
+      "issuer": "MAS CHOICES",
+      "recipient": "Golden Jade",
+      "amount_rule": "供應商確認成本、付款、出貨月份、收貨人與品項。",
+      "source_documents": "供應商回簽PI"
+    },
+    {
+      "code": "PI_GJ_NEXO",
+      "filename_pattern": "PI {order_no} {supplier} GJ-NEXO.pdf",
+      "issuer": "Golden Jade",
+      "recipient": "NEXO",
+      "amount_rule": "同PO_NEXO_GJ，列NEXO留利折讓；SM260515為USD 40,302。",
+      "source_documents": "PO_NEXO_GJ + 供應商PI + 商品主檔"
+    },
+    {
+      "code": "PI_NEXO_SM",
+      "filename_pattern": "PI {order_no} {supplier} NEXO-SM.pdf",
+      "issuer": "NEXO",
+      "recipient": "SIMPLE MART PLUS",
+      "amount_rule": "使用客戶轉售金額，不列NEXO留利折讓；SM260515為USD 40,752。",
+      "source_documents": "客戶PO + 最終數量 + 商品主檔"
+    },
+    {
+      "code": "CI_GJ_NEXO",
+      "filename_pattern": "CI_GJ-NEXO_{order_no}_小T.pdf",
+      "issuer": "Golden Jade",
+      "recipient": "NEXO",
+      "amount_rule": "CI需與PI_GJ_NEXO一致；以Discount -USD450呈現NEXO留利。",
+      "source_documents": "PI_GJ_NEXO + 出貨確認資料"
+    },
+    {
+      "code": "CI_NEXO_SM",
+      "filename_pattern": "CI_NEXO-SM_{order_no}_小T.pdf",
+      "issuer": "NEXO",
+      "recipient": "SIMPLE MART PLUS",
+      "amount_rule": "CI需與PI_NEXO_SM一致；不得出現高玉成本或NEXO留利。",
+      "source_documents": "PI_NEXO_SM + 出貨確認資料"
+    },
+    {
+      "code": "PL_GJ_NEXO",
+      "filename_pattern": "PL_GJ-NEXO_{order_no}_小T.pdf",
+      "issuer": "Golden Jade",
+      "recipient": "NEXO",
+      "amount_rule": "PL不列金額；Buyer=NEXO，Consignee=Simple Mart，箱數與效期需與CI一致。",
+      "source_documents": "CI_GJ_NEXO + 供應商PL/出貨資料"
+    },
+    {
+      "code": "PL_NEXO_SM",
+      "filename_pattern": "PL_NEXO-SM_{order_no}_小T.pdf",
+      "issuer": "NEXO",
+      "recipient": "SIMPLE MART PLUS",
+      "amount_rule": "PL不列金額；Buyer與Consignee皆為Simple Mart，箱數與效期需與CI一致。",
+      "source_documents": "CI_NEXO_SM + 供應商PL/出貨資料"
+    }
+  ],
+  "validation_rules": [
+    "同一訂單的品名、條碼、規格、產地、箱入數需在所有轉單文件一致。",
+    "NEXO-SM金額 - GJ-NEXO金額必須等於NEXO留利。",
+    "GJ-NEXO金額 - 供應商成本金額為高玉毛利基礎。",
+    "PL箱數合計需等於CI/PI最終箱數；SM260515為1,380 CTNS。",
+    "C類交易若客戶最終金額大於USD10,000，留利USD450；小於或等於USD10,000，留利USD150。",
+    "G7例外不得套NEXO留利，需改走TDS/Feast採購規則。"
+  ]
+}

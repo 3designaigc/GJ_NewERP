@@ -312,6 +312,31 @@ select {
   gap: 9px;
 }
 
+.transfer-flow {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.transfer-flow div {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #f8fafc;
+  padding: 9px 10px;
+}
+
+.transfer-flow strong,
+.transfer-flow span {
+  display: block;
+}
+
+.transfer-flow span {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
 .bar-row {
   display: grid;
   grid-template-columns: minmax(90px, 170px) 1fr 44px;
@@ -367,6 +392,10 @@ select {
   border-radius: 8px;
   box-shadow: var(--shadow);
   max-height: calc(100vh - 132px);
+}
+
+.compact-table {
+  max-height: 360px;
 }
 
 table {
