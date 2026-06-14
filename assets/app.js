@@ -108,9 +108,9 @@ const procurementModeConfig = {
     subtitle: "買進轉手",
     poType: "Resale Purchase Order",
     paymentRule: "依供應商條件建立應付；同時建立客戶應收與高玉毛利。",
-    cashflowRule: "完整認列進貨成本、銷貨收入、毛利；NEXO 特例需保留 450 / 150。",
+    cashflowRule: "完整認列進貨成本、銷貨收入、毛利；所有 C 類訂單都需保留 NEXO 利潤。",
     supplierInstruction: "請供應商確認買斷價格、交期、箱規與可銷售文件。",
-    documentNote: "文件需支援高玉買斷再銷售，品名、箱數、重量、條碼要與客戶端資料一致。",
+    documentNote: "文件需支援高玉買斷再銷售，並依客戶訂單金額保留 NEXO 利潤。",
   },
   D: {
     title: "台幣到倉買進 / 寄倉訂單草稿",
@@ -439,6 +439,16 @@ function procurementConfigFor(row, category) {
   return base;
 }
 
+function nexoReserve(order, lineTotal) {
+  if (order.tradeMode.category !== "C") return null;
+  const reserve = lineTotal > 10000 ? 450 : 150;
+  return {
+    reserve,
+    threshold: 10000,
+    text: `C 類買進轉手全數保留 NEXO 利潤；客戶訂單金額 ${order.currency} ${money(lineTotal)} ${lineTotal > 10000 ? "大於" : "小於或等於"} USD 10,000，保留 USD ${money(reserve)} 給 NEXO。`,
+  };
+}
+
 function renderDashboard() {
   const payable = state.cashflow.filter((row) => row.type === "應付").reduce((sum, row) => sum + Number(row.twd_amt || 0), 0);
   const receivable = state.cashflow.filter((row) => row.type === "應收").reduce((sum, row) => sum + Number(row.twd_amt || 0), 0);
@@ -693,6 +703,7 @@ function renderPurchaseOrderDraft() {
   const unitsPerCarton = numberValue(product["箱入數"]) || 1;
   const totalUnits = cartons * unitsPerCarton;
   const lineTotal = cartons * numberValue(order.requestedPrice);
+  const nexo = nexoReserve(order, lineTotal);
   const today = new Date().toISOString().slice(0, 10);
   const canIssue = order.status === "approved";
   $("purchaseOrderDraft").innerHTML = `
@@ -787,10 +798,12 @@ function renderPurchaseOrderDraft() {
         <p>${escapeHtml(order.note)}</p>
         <p>系統檢查：${escapeHtml(order.reasons.length ? order.reasons.join("、") : "符合底線與通路規則")}</p>
         <p>交易特例：${escapeHtml(order.tradeMode.note || "無")}</p>
+        ${nexo ? `<p>NEXO 留利：${escapeHtml(nexo.text)}</p>` : ""}
       </section>
       <section class="po-total">
         <span>Total</span>
         <strong>${escapeHtml(order.currency)} ${money(lineTotal)}</strong>
+        ${nexo ? `<em>NEXO USD ${money(nexo.reserve)}</em>` : ""}
       </section>
     </div>
 

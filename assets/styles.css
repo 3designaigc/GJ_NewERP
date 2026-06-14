@@ -614,6 +614,15 @@ tbody tr:hover {
   font-size: 18px;
 }
 
+.po-total em {
+  display: block;
+  margin-top: 8px;
+  color: var(--accent-2);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+}
+
 .po-parties {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-top: 16px;
