@@ -7,6 +7,7 @@ const state = {
   docChecks: [],
   docTracks: [],
   shipments: [],
+  tradeRules: {},
   currentUser: null,
   salesQuoteMap: new Map(),
   procurementOrders: [],
@@ -80,6 +81,64 @@ const files = {
   docChecks: "json/文件核對.json",
   docTracks: "json/文件追蹤.json",
   shipments: "json/船班追蹤.json",
+  tradeRules: "json/交易模式對應.json",
+};
+
+const procurementModeConfig = {
+  A: {
+    title: "TDS 代採佣金訂單草稿",
+    subtitle: "收佣金(TDS)",
+    poType: "TDS Agency Purchase Instruction",
+    paymentRule: "BL/ETD + 90，與 TDS 清帳",
+    cashflowRule: "只建立應收毛利；不認列完整買斷庫存成本。",
+    supplierInstruction: "請供應商對 TDS / 指定窗口提供 PI，價格與箱數需可回填高玉佣金計算。",
+    documentNote: "PI、CI、PL、COO、HC / COA、B/L 需支援 TDS 代採文件核對。",
+  },
+  B: {
+    title: "PC 東森直銷佣金訂單草稿",
+    subtitle: "收佣金(PC)",
+    poType: "PC Direct Sales Commission Instruction",
+    paymentRule: "BL + 90；高玉應收毛利 10%，並產生應付半額給 TDS。",
+    cashflowRule: "建立 PC 佣金應收與 TDS 半額應付，不作一般買斷處理。",
+    supplierInstruction: "確認 Pietro Coricelli / PC 品牌、東森客戶條件與 TDS 分潤基準。",
+    documentNote: "PI 必須標明 PC 品牌品名、客戶、數量與 BL 日期，以利 BL+90 計算。",
+  },
+  C: {
+    title: "買進轉手採購訂單草稿",
+    subtitle: "買進轉手",
+    poType: "Resale Purchase Order",
+    paymentRule: "依供應商條件建立應付；同時建立客戶應收與高玉毛利。",
+    cashflowRule: "完整認列進貨成本、銷貨收入、毛利；NEXO 特例需保留 450 / 150。",
+    supplierInstruction: "請供應商確認買斷價格、交期、箱規與可銷售文件。",
+    documentNote: "文件需支援高玉買斷再銷售，品名、箱數、重量、條碼要與客戶端資料一致。",
+  },
+  D: {
+    title: "台幣到倉買進 / 寄倉訂單草稿",
+    subtitle: "買進/寄倉",
+    poType: "Landed Cost Purchase Order",
+    paymentRule: "Feast: BL+65；Europastry: BL+60；VIRU: 50% PO + 50% BL。",
+    cashflowRule: "先核算台幣到倉成本，再建立採購、庫存、應付與後續銷售底線。",
+    supplierInstruction: "確認 EXW/FOB/CIF 基準、冷凍溫層、箱/板、BBD 與到倉成本公式。",
+    documentNote: "冷凍與到倉價文件需含溫層、效期、棧板、CI、PL、COO、HC / COA、B/L。",
+  },
+  E: {
+    title: "根因佣金訂單草稿",
+    subtitle: "收佣金(根因)",
+    poType: "Genyin Commission Purchase Instruction",
+    paymentRule: "LC 開狀 + 90；只應收毛利，不分根因。",
+    cashflowRule: "建立根因佣金應收；不套用一般 TDS 或買斷規則。",
+    supplierInstruction: "確認天津 / 根因文件、LC 開狀時間與毛利計算基準。",
+    documentNote: "PI 與後續文件需能回推 LC 開狀日，作為 +90 收款節點。",
+  },
+  U: {
+    title: "未分類交易模式待確認",
+    subtitle: "未分類_待確認",
+    poType: "Pending Trade Mode Review",
+    paymentRule: "暫停自動付款節點，待本人確認。",
+    cashflowRule: "不自動建立現金流。",
+    supplierInstruction: "新供應商或費用類品項不得自動下單。",
+    documentNote: "待確認後再產生正式文件要求。",
+  },
 };
 
 const viewMeta = {
@@ -227,6 +286,7 @@ async function loadData() {
   state.docChecks = objectMapToRows(loaded.docChecks, "文件核對");
   state.docTracks = objectMapToRows(loaded.docTracks, "文件追蹤");
   state.shipments = objectMapToRows(loaded.shipments, "船班");
+  state.tradeRules = loaded.tradeRules || {};
   state.salesQuoteMap = new Map(
     loaded.sales
       .filter((row) => Array.isArray(row))
@@ -237,22 +297,65 @@ async function loadData() {
 }
 
 function buildProcurementOrders() {
-  const frozenTwd = state.products.find((row) => row["報價交易條件"] === "到倉價" && numberValue(row["台幣最低報價"]) > 0);
-  const foreign = state.products.find((row) => row["報價交易條件"] !== "到倉價" && numberValue(row["外幣10%底線"]) > 0);
-  const costco = state.products.find((row) => isCostcoProject(row)) || frozenTwd;
+  const tds = state.products.find((row) => resolveTradeMode(row, "生活良好").category === "A");
+  const pc = state.products.find((row) => resolveTradeMode(row, "東森").category === "B");
+  const resale = state.products.find((row) => resolveTradeMode(row).category === "C" && numberValue(row["外幣10%底線"]) > 0);
+  const landed = state.products.find((row) => resolveTradeMode(row).category === "D" && numberValue(row["台幣最低報價"]) > 0);
+  const genyin = state.products.find((row) => resolveTradeMode(row).category === "E");
+  const costco = state.products.find((row) => isCostcoProject(row)) || landed;
   return [
     createProcurementOrder({
       id: "SO-2026-0614-001",
-      customer: "高玉冷凍通路",
-      channel: "冷凍品",
-      quoteBasis: "TWD_LANDED",
-      requestedPrice: numberValue(frozenTwd?.["台幣最低報價"]) + 2,
+      customer: "生活良好",
+      channel: "全通路",
+      quoteBasis: "FOREIGN",
+      requestedPrice: numberValue(tds?.["外幣10%底線"]) + 0.2,
       cartons: 120,
-      product: frozenTwd,
-      note: "價格符合台幣到倉底線，可直接進入國際採購。",
+      product: tds,
+      note: "TDS 代採佣金模式，合規後產生 TDS 採購指示草稿。",
     }),
     createProcurementOrder({
       id: "SO-2026-0614-002",
+      customer: "東森",
+      channel: "直銷",
+      quoteBasis: "FOREIGN",
+      requestedPrice: numberValue(pc?.["外幣10%底線"]) + 0.2,
+      cartons: 90,
+      product: pc,
+      note: "PC 東森直銷佣金模式，需同步 TDS 半額應付規則。",
+    }),
+    createProcurementOrder({
+      id: "SO-2026-0614-003",
+      customer: "一般貿易客戶",
+      channel: "全通路",
+      quoteBasis: "FOREIGN",
+      requestedPrice: numberValue(resale?.["外幣10%底線"]) + 0.3,
+      cartons: 60,
+      product: resale,
+      note: "買進轉手模式，會建立完整進貨成本、銷貨收入與毛利。",
+    }),
+    createProcurementOrder({
+      id: "SO-2026-0614-004",
+      customer: "高玉冷凍通路",
+      channel: "冷凍品",
+      quoteBasis: "TWD_LANDED",
+      requestedPrice: numberValue(landed?.["台幣最低報價"]) + 2,
+      cartons: 120,
+      product: landed,
+      note: "台幣到倉買進 / 寄倉模式，採購草稿需帶入到倉成本與付款節點。",
+    }),
+    createProcurementOrder({
+      id: "SO-2026-0614-005",
+      customer: "根因專案客戶",
+      channel: "專案",
+      quoteBasis: "FOREIGN",
+      requestedPrice: numberValue(genyin?.["外幣10%底線"]) + 0.2,
+      cartons: 50,
+      product: genyin,
+      note: "根因佣金模式，採 LC 開狀 + 90 的收款規則。",
+    }),
+    createProcurementOrder({
+      id: "SO-2026-0614-006",
       customer: "好市多專案",
       channel: "好市多",
       quoteBasis: "TWD_LANDED",
@@ -261,22 +364,43 @@ function buildProcurementOrders() {
       product: costco,
       note: "好市多專案低於底線，必須先由本人核准。",
     }),
-    createProcurementOrder({
-      id: "SO-2026-0614-003",
-      customer: "一般貿易客戶",
-      channel: "全通路",
-      quoteBasis: "FOREIGN",
-      requestedPrice: numberValue(foreign?.["外幣10%底線"]) + 0.3,
-      cartons: 60,
-      product: foreign,
-      note: "外幣價格高於底線，可建立國外供應商訂單草稿。",
-    }),
   ].filter(Boolean);
+}
+
+function resolveTradeMode(row, customer = "") {
+  const supplier = String(row?.["供應商"] || "");
+  const name = `${row?.["中文品名"] || ""} ${row?.["英文品名"] || ""}`;
+  const specialText = `${name} ${row?.["產品類別"] || ""}`;
+  if (supplier === "TDS" && /墊付|代墊|紙袋|印刷|費用/.test(specialText)) {
+    return { mode: "未分類_待確認", category: "U", source: "TDS費用類特例" };
+  }
+  const brandRules = state.tradeRules["品牌判斷"]?.["Pietro Coricelli"];
+  if (supplier === "PC" || supplier.includes("Pietro") || name.includes("Pietro") || name.includes("Cirio") || name.includes("奇里歐")) {
+    for (const rule of brandRules?.["規則"] || []) {
+      const target = rule["條件"] === "客戶含" ? customer : name;
+      if ((rule["關鍵字"] || []).some((keyword) => target.includes(keyword))) {
+        return { mode: rule["模式"], category: rule["類別"], source: "PC品牌/客戶規則" };
+      }
+    }
+    const fallback = brandRules?.["預設"];
+    if (fallback) return { mode: fallback["模式"], category: fallback["類別"], source: "PC預設規則" };
+  }
+  const supplierRule = state.tradeRules["供應商對應"]?.[supplier];
+  if (supplierRule) return { mode: supplierRule["模式"], category: supplierRule["類別"], source: "供應商對應", note: supplierRule["備註"] || "" };
+  const mode = String(row?.["交易模式"] || "");
+  if (mode.includes("TDS")) return { mode: "收佣金(TDS)", category: "A", source: "商品交易模式" };
+  if (mode.includes("PC")) return { mode: "收佣金(PC)", category: "B", source: "商品交易模式" };
+  if (mode.includes("轉手")) return { mode: "買進轉手", category: "C", source: "商品交易模式" };
+  if (mode === "買進") return { mode: "買進", category: "D", source: "商品交易模式" };
+  if (mode.includes("根因")) return { mode: "收佣金(根因)", category: "E", source: "商品交易模式" };
+  return { mode: "未分類_待確認", category: "U", source: "無對應規則" };
 }
 
 function createProcurementOrder(config) {
   const row = config.product;
   if (!row) return null;
+  const tradeMode = resolveTradeMode(row, config.customer);
+  const modeConfig = procurementConfigFor(row, tradeMode.category);
   const quoteBasis = config.quoteBasis;
   const isTwd = quoteBasis === "TWD_LANDED";
   const floor = isTwd ? numberValue(row["台幣10%底線"]) : numberValue(row["外幣10%底線"]);
@@ -289,17 +413,30 @@ function createProcurementOrder(config) {
   if (!priceOk) reasons.push("低於報價底線");
   if (!hasRequiredCost) reasons.push("缺台幣到倉成本");
   if (!usesAllowedBasis) reasons.push("此客戶/通路僅允許台幣到倉價");
+  if (tradeMode.category === "U") reasons.push("交易模式未分類，需本人確認");
   return {
     ...config,
     product: row,
+    tradeMode,
+    modeConfig,
     currency: isTwd ? "TWD" : currencyCode(row["幣別"]),
     floor,
-    status,
+    status: status === "approved" && tradeMode.category !== "U" ? "approved" : "approval",
     reasons,
     poNo: `GJ-PO-${config.id.split("-").slice(-1)[0]}`,
     incoterms: row["報價交易條件"] || row["成本交易條件"] || "TBD",
-    payment: row["付款條件"] || "TBD",
+    payment: modeConfig.paymentRule || row["付款條件"] || "TBD",
   };
+}
+
+function procurementConfigFor(row, category) {
+  const base = procurementModeConfig[category] || procurementModeConfig.U;
+  if (category !== "D") return base;
+  const supplier = String(row["供應商"] || "");
+  if (supplier.includes("Feast")) return { ...base, paymentRule: "Feast 透過 TDS，應付 BL + 65。" };
+  if (supplier.includes("Europastry")) return { ...base, paymentRule: "Europastry 直採，應付 BL + 60。" };
+  if (supplier.includes("VIRU")) return { ...base, paymentRule: "VIRU 直採，50% PO + 50% BL。" };
+  return base;
 }
 
 function renderDashboard() {
@@ -534,6 +671,7 @@ function renderOrderCard(order) {
       <strong>${escapeHtml(order.id)}</strong>
       <span>${escapeHtml(order.customer)}｜${escapeHtml(order.channel)}</span>
       <span>${escapeHtml(product["中文品名"])}</span>
+      <span>模式 ${escapeHtml(order.tradeMode.category)}｜${escapeHtml(order.modeConfig.subtitle)}</span>
       <span class="order-price">${escapeHtml(order.currency)} ${money(order.requestedPrice)} / 底線 ${money(order.floor)}</span>
       <small>${escapeHtml(reasonText)}</small>
     </button>
@@ -561,8 +699,8 @@ function renderPurchaseOrderDraft() {
     <div class="po-ribbon ${canIssue ? "ready" : "blocked"}">${canIssue ? "Ready for International Purchasing" : "Owner Approval Required"}</div>
     <header class="po-header">
       <div>
-        <p class="po-kicker">Purchase Order Draft</p>
-        <h3>國外供應商訂單草稿</h3>
+        <p class="po-kicker">${escapeHtml(order.modeConfig.poType)}</p>
+        <h3>${escapeHtml(order.modeConfig.title)}</h3>
       </div>
       <div class="po-number">
         <span>PO No.</span>
@@ -588,7 +726,23 @@ function renderPurchaseOrderDraft() {
         <p>Date: ${escapeHtml(today)}</p>
         <p>Incoterms: ${escapeHtml(order.incoterms)}</p>
         <p>Currency: ${escapeHtml(order.currency)}</p>
+        <p>Trade Mode: ${escapeHtml(order.tradeMode.category)}｜${escapeHtml(order.tradeMode.mode)}</p>
       </section>
+    </div>
+
+    <div class="mode-summary">
+      <div>
+        <span>判斷來源</span>
+        <strong>${escapeHtml(order.tradeMode.source)}</strong>
+      </div>
+      <div>
+        <span>付款節點</span>
+        <strong>${escapeHtml(order.modeConfig.paymentRule)}</strong>
+      </div>
+      <div>
+        <span>現金流處理</span>
+        <strong>${escapeHtml(order.modeConfig.cashflowRule)}</strong>
+      </div>
     </div>
 
     <table class="po-lines">
@@ -623,15 +777,16 @@ function renderPurchaseOrderDraft() {
       <section>
         <h4>文件與出貨要求</h4>
         <ul>
+          <li>${escapeHtml(order.modeConfig.supplierInstruction)}</li>
+          <li>${escapeHtml(order.modeConfig.documentNote)}</li>
           <li>PI 價格、品名、規格、箱數需與本草稿一致。</li>
-          <li>出貨前提供 CI、PL、COO、HC / COA；出貨後補 B/L。</li>
-          <li>冷凍品需確認溫層、BBD、箱/板與到港文件版本。</li>
         </ul>
       </section>
       <section>
         <h4>審核狀態</h4>
         <p>${escapeHtml(order.note)}</p>
         <p>系統檢查：${escapeHtml(order.reasons.length ? order.reasons.join("、") : "符合底線與通路規則")}</p>
+        <p>交易特例：${escapeHtml(order.tradeMode.note || "無")}</p>
       </section>
       <section class="po-total">
         <span>Total</span>
