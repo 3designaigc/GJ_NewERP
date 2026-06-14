@@ -5,7 +5,7 @@
     "name": "供應鏈 / 訂單文件",
     "folder_id": "1n1i14LmsqNTiH64vH7mXWYudFRRl-ipo",
     "url": "https://drive.google.com/drive/folders/1n1i14LmsqNTiH64vH7mXWYudFRRl-ipo",
-    "status": "已提供資料夾連結；目前讀取時導向Google登入頁，等待開放知道連結者可檢視或提供可讀取授權",
+    "status": "已成功讀取Google Drive第一層與訂單資料夾檔案清單",
     "visible_examples": [
       "..已完成（收款流程結束）",
       "25OL0004",
@@ -14,7 +14,8 @@
       "SM260414-26FA0004",
       "SM260415-26FA0005",
       "SM260435-26FA0006"
-    ]
+    ],
+    "scanned_at": "2026-06-15"
   },
   "folder_template": {
     "order_folder": "{PO或訂單號}-{供應商}-{客戶}",
@@ -38,56 +39,121 @@
       "name": "Purchase Order / 採購單",
       "stage": "下單",
       "required_before": "送供應商或TDS下單",
-      "check_fields": ["PO號", "供應商", "客戶", "交易模式", "付款條件", "商品明細", "數量", "單價", "總額"]
+      "check_fields": [
+        "PO號",
+        "供應商",
+        "客戶",
+        "交易模式",
+        "付款條件",
+        "商品明細",
+        "數量",
+        "單價",
+        "總額"
+      ]
     },
     {
       "code": "PI",
       "name": "Proforma Invoice / 形式發票",
       "stage": "PI核對",
       "required_before": "轉正式文件追蹤",
-      "check_fields": ["品名", "規格", "數量", "箱數", "單價", "總額", "幣別", "Incoterms", "付款條件"]
+      "check_fields": [
+        "品名",
+        "規格",
+        "數量",
+        "箱數",
+        "單價",
+        "總額",
+        "幣別",
+        "Incoterms",
+        "付款條件"
+      ]
     },
     {
       "code": "CI",
       "name": "Commercial Invoice / 商業發票",
       "stage": "出貨前",
       "required_before": "報關",
-      "check_fields": ["品名", "數量", "單價", "總額", "產地", "收貨人", "Invoice No."]
+      "check_fields": [
+        "品名",
+        "數量",
+        "單價",
+        "總額",
+        "產地",
+        "收貨人",
+        "Invoice No."
+      ]
     },
     {
       "code": "PL",
       "name": "Packing List / 裝箱單",
       "stage": "出貨前",
       "required_before": "報關與倉儲安排",
-      "check_fields": ["箱數", "箱入數", "Gross weight", "Net weight", "棧板數", "尺寸", "批號"]
+      "check_fields": [
+        "箱數",
+        "箱入數",
+        "Gross weight",
+        "Net weight",
+        "棧板數",
+        "尺寸",
+        "批號"
+      ]
     },
     {
       "code": "COO",
       "name": "Certificate of Origin / 產地證明",
       "stage": "出貨前",
       "required_before": "報關",
-      "check_fields": ["產地", "供應商", "收貨人", "品名", "重量", "發證單位"]
+      "check_fields": [
+        "產地",
+        "供應商",
+        "收貨人",
+        "品名",
+        "重量",
+        "發證單位"
+      ]
     },
     {
       "code": "HC",
       "name": "Health Certificate / 衛生證明",
       "stage": "出貨前",
       "required_before": "食品進口報關",
-      "check_fields": ["品名", "產地", "製造商", "批號", "效期", "衛生證明號"]
+      "check_fields": [
+        "品名",
+        "產地",
+        "製造商",
+        "批號",
+        "效期",
+        "衛生證明號"
+      ]
     },
     {
       "code": "COA",
       "name": "Certificate of Analysis / 分析報告",
       "stage": "出貨前",
       "required_before": "品質文件歸檔",
-      "check_fields": ["批號", "檢驗項目", "結果", "日期", "製造商"]
+      "check_fields": [
+        "批號",
+        "檢驗項目",
+        "結果",
+        "日期",
+        "製造商"
+      ]
     },
     {
       "code": "BL",
       "name": "Bill of Lading / 提單",
       "stage": "出貨後",
       "required_before": "付款節點與船班追蹤",
-      "check_fields": ["B/L No.", "船名", "航次", "ETD", "ETA", "收貨人", "Notify party", "櫃號"]
+      "check_fields": [
+        "B/L No.",
+        "船名",
+        "航次",
+        "ETD",
+        "ETA",
+        "收貨人",
+        "Notify party",
+        "櫃號"
+      ]
     }
   ],
   "status_flow": [
@@ -106,23 +172,201 @@
   "archive_samples": [
     {
       "order_no": "25OL0004",
-      "supplier": "待雲端掃描",
-      "customer": "待雲端掃描",
-      "status": "待連結Google Drive",
+      "supplier": "Agro",
+      "customer": "東森",
+      "status": "文件缺件待追",
       "folder_name": "25OL0004",
-      "received": ["待掃描"],
-      "missing": ["PI", "CI", "PL", "COO", "HC/COA", "BL"],
-      "note": "截圖可見資料夾，尚未取得實際檔案清單"
+      "folder_id": "1W4Z2FsmEiraJWFU-qxBWuu3-3gmw90bl",
+      "folder_url": "https://drive.google.com/drive/folders/1W4Z2FsmEiraJWFU-qxBWuu3-3gmw90bl",
+      "file_count": 9,
+      "received": [
+        "PO",
+        "PI",
+        "CI"
+      ],
+      "missing": [
+        "PL",
+        "COO",
+        "HC_COA",
+        "BL"
+      ],
+      "note": "缺 PL、COO、HC_COA、BL"
+    },
+    {
+      "order_no": "25OL0005",
+      "supplier": "Agro",
+      "customer": "東森",
+      "status": "文件缺件待追",
+      "folder_name": "25OL0005",
+      "folder_id": "1INSNVHy1DmSV6O67tNil8i3kCF2DtJgh",
+      "folder_url": "https://drive.google.com/drive/folders/1INSNVHy1DmSV6O67tNil8i3kCF2DtJgh",
+      "file_count": 9,
+      "received": [
+        "PO",
+        "PI",
+        "CI"
+      ],
+      "missing": [
+        "PL",
+        "COO",
+        "HC_COA",
+        "BL"
+      ],
+      "note": "缺 PL、COO、HC_COA、BL"
     },
     {
       "order_no": "26IC0001",
       "supplier": "G7",
       "customer": "桂冠",
-      "status": "待連結Google Drive",
+      "status": "待PI",
       "folder_name": "26IC0001-G7冰淇淋_桂冠",
-      "received": ["待掃描"],
-      "missing": ["PI", "CI", "PL", "COO", "HC/COA", "BL"],
-      "note": "G7走TDS/Feast模式，文件需比照透過TDS採購流程"
+      "folder_id": "11xLBWZ1TfAfEiTl87xfiV3OQFbK2rvD4",
+      "folder_url": "https://drive.google.com/drive/folders/11xLBWZ1TfAfEiTl87xfiV3OQFbK2rvD4",
+      "file_count": 4,
+      "received": [
+        "PO",
+        "BL"
+      ],
+      "missing": [
+        "PI",
+        "CI",
+        "PL",
+        "COO",
+        "HC_COA"
+      ],
+      "note": "缺 PI、CI、PL、COO、HC_COA"
+    },
+    {
+      "order_no": "SM260414",
+      "supplier": "C&F",
+      "customer": "美廉",
+      "status": "文件缺件待追",
+      "folder_name": "SM260414-26FA0004",
+      "folder_id": "1sZV5EhtKRZEPEjOC-zK3iDG_jJaGW5Ge",
+      "folder_url": "https://drive.google.com/drive/folders/1sZV5EhtKRZEPEjOC-zK3iDG_jJaGW5Ge",
+      "file_count": 15,
+      "received": [
+        "PO",
+        "PI",
+        "CI",
+        "PL",
+        "COO",
+        "BL"
+      ],
+      "missing": [
+        "HC_COA"
+      ],
+      "note": "缺 HC_COA"
+    },
+    {
+      "order_no": "SM260415",
+      "supplier": "C&F",
+      "customer": "美廉",
+      "status": "文件缺件待追",
+      "folder_name": "SM260415-26FA0005",
+      "folder_id": "1iFr5RMoxXbqcMGEVFc8q0FBZ2vfgIvGr",
+      "folder_url": "https://drive.google.com/drive/folders/1iFr5RMoxXbqcMGEVFc8q0FBZ2vfgIvGr",
+      "file_count": 9,
+      "received": [
+        "PO",
+        "PI",
+        "CI",
+        "PL"
+      ],
+      "missing": [
+        "COO",
+        "HC_COA",
+        "BL"
+      ],
+      "note": "缺 COO、HC_COA、BL"
+    },
+    {
+      "order_no": "SM260435",
+      "supplier": "Go Bites",
+      "customer": "美廉",
+      "status": "文件缺件待追",
+      "folder_name": "SM260435-26FA0006",
+      "folder_id": "1xGmbJr6M2ULOGAWGnUl9nKLJ-THA8Tbi",
+      "folder_url": "https://drive.google.com/drive/folders/1xGmbJr6M2ULOGAWGnUl9nKLJ-THA8Tbi",
+      "file_count": 10,
+      "received": [
+        "PO",
+        "PI",
+        "CI",
+        "PL"
+      ],
+      "missing": [
+        "COO",
+        "HC_COA",
+        "BL"
+      ],
+      "note": "缺 COO、HC_COA、BL"
+    },
+    {
+      "order_no": "SM260444",
+      "supplier": "Go Bites",
+      "customer": "美廉",
+      "status": "文件缺件待追",
+      "folder_name": "SM260444-26FA0007",
+      "folder_id": "14Eu9pnVM2-3ejFH7Q1BN73ANA_cDCKWd",
+      "folder_url": "https://drive.google.com/drive/folders/14Eu9pnVM2-3ejFH7Q1BN73ANA_cDCKWd",
+      "file_count": 10,
+      "received": [
+        "PO",
+        "PI",
+        "CI",
+        "PL"
+      ],
+      "missing": [
+        "COO",
+        "HC_COA",
+        "BL"
+      ],
+      "note": "缺 COO、HC_COA、BL"
+    },
+    {
+      "order_no": "SM260515",
+      "supplier": "Mas Choices",
+      "customer": "美廉",
+      "status": "文件缺件待追",
+      "folder_name": "SM260515-26FA0008",
+      "folder_id": "1bC6w6X9SlRKnjmTqiqzoVh8s0COtoWru",
+      "folder_url": "https://drive.google.com/drive/folders/1bC6w6X9SlRKnjmTqiqzoVh8s0COtoWru",
+      "file_count": 10,
+      "received": [
+        "PO",
+        "PI",
+        "CI",
+        "PL"
+      ],
+      "missing": [
+        "COO",
+        "HC_COA",
+        "BL"
+      ],
+      "note": "缺 COO、HC_COA、BL"
+    },
+    {
+      "order_no": "SM260531",
+      "supplier": "待確認",
+      "customer": "美廉",
+      "status": "文件缺件待追",
+      "folder_name": "SM260531-26FA0009",
+      "folder_id": "1SiLGQzsDlnSRWjrbRNGl3riAY_rWJZtH",
+      "folder_url": "https://drive.google.com/drive/folders/1SiLGQzsDlnSRWjrbRNGl3riAY_rWJZtH",
+      "file_count": 6,
+      "received": [
+        "PO",
+        "PI"
+      ],
+      "missing": [
+        "CI",
+        "PL",
+        "COO",
+        "HC_COA",
+        "BL"
+      ],
+      "note": "缺 CI、PL、COO、HC_COA、BL"
     }
   ]
 }

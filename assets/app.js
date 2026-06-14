@@ -9,6 +9,7 @@ const state = {
   shipments: [],
   tradeRules: {},
   documentArchive: {},
+  orderDocumentScan: {},
   currentUser: null,
   salesQuoteMap: new Map(),
   procurementOrders: [],
@@ -87,6 +88,7 @@ const files = {
   shipments: "json/船班追蹤.json",
   tradeRules: "json/交易模式對應.json",
   documentArchive: "json/document_archive_rules.json",
+  orderDocumentScan: "json/order_document_scan.json",
 };
 
 const procurementModeConfig = {
@@ -294,6 +296,7 @@ async function loadData() {
   state.shipments = objectMapToRows(loaded.shipments, "船班");
   state.tradeRules = loaded.tradeRules || {};
   state.documentArchive = loaded.documentArchive || {};
+  state.orderDocumentScan = loaded.orderDocumentScan || {};
   state.salesQuoteMap = new Map(
     loaded.sales
       .filter((row) => Array.isArray(row))
@@ -707,13 +710,15 @@ function renderDocumentArchive() {
       `
     )
     .join("");
-  $("archiveSampleBody").innerHTML = (archive.archive_samples || [])
+  const archiveRows = state.orderDocumentScan.orders || archive.archive_samples || [];
+  $("archiveSampleBody").innerHTML = archiveRows
     .map(
       (row) => `
         <tr>
           <td><strong>${escapeHtml(row.order_no)}</strong><br><span class="muted">${escapeHtml(row.folder_name)}</span></td>
           <td>${escapeHtml(row.supplier)}<br><span class="muted">${escapeHtml(row.customer)}</span></td>
           <td><span class="pill out">${escapeHtml(row.status)}</span></td>
+          <td class="num">${money(row.file_count || 0)}</td>
           <td>${escapeHtml(row.missing)}</td>
           <td>${escapeHtml(row.note)}</td>
         </tr>

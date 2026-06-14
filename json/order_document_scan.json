@@ -1,0 +1,785 @@
+{
+  "_說明": "Google Drive 訂單文件掃描結果。由供應鏈/訂單文件資料夾讀取第一層訂單資料夾與檔案名稱後分類。",
+  "_更新": "2026-06-15",
+  "drive_root": {
+    "id": "1n1i14LmsqNTiH64vH7mXWYudFRRl-ipo",
+    "url": "https://drive.google.com/drive/folders/1n1i14LmsqNTiH64vH7mXWYudFRRl-ipo",
+    "name": "供應鏈 / 訂單文件"
+  },
+  "root_items": [
+    {
+      "id": "1PFbHv_clH3HI4vf0-WnVApLVPzZmmMRT",
+      "name": "..已完成(收款流程結束）",
+      "mime": "application/vnd.google-apps.folder"
+    },
+    {
+      "id": "1W4Z2FsmEiraJWFU-qxBWuu3-3gmw90bl",
+      "name": "25OL0004",
+      "mime": "application/vnd.google-apps.folder"
+    },
+    {
+      "id": "1INSNVHy1DmSV6O67tNil8i3kCF2DtJgh",
+      "name": "25OL0005",
+      "mime": "application/vnd.google-apps.folder"
+    },
+    {
+      "id": "11xLBWZ1TfAfEiTl87xfiV3OQFbK2rvD4",
+      "name": "26IC0001-G7冰淇淋_桂冠",
+      "mime": "application/vnd.google-apps.folder"
+    },
+    {
+      "id": "1sZV5EhtKRZEPEjOC-zK3iDG_jJaGW5Ge",
+      "name": "SM260414-26FA0004",
+      "mime": "application/vnd.google-apps.folder"
+    },
+    {
+      "id": "1iFr5RMoxXbqcMGEVFc8q0FBZ2vfgIvGr",
+      "name": "SM260415-26FA0005",
+      "mime": "application/vnd.google-apps.folder"
+    },
+    {
+      "id": "1xGmbJr6M2ULOGAWGnUl9nKLJ-THA8Tbi",
+      "name": "SM260435-26FA0006",
+      "mime": "application/vnd.google-apps.folder"
+    },
+    {
+      "id": "14Eu9pnVM2-3ejFH7Q1BN73ANA_cDCKWd",
+      "name": "SM260444-26FA0007",
+      "mime": "application/vnd.google-apps.folder"
+    },
+    {
+      "id": "1bC6w6X9SlRKnjmTqiqzoVh8s0COtoWru",
+      "name": "SM260515-26FA0008",
+      "mime": "application/vnd.google-apps.folder"
+    },
+    {
+      "id": "1SiLGQzsDlnSRWjrbRNGl3riAY_rWJZtH",
+      "name": "SM260531-26FA0009",
+      "mime": "application/vnd.google-apps.folder"
+    },
+    {
+      "id": "1eDzEf33E2BCecAqYaGojjpgcJ_FwGWjJ",
+      "name": "測試_小T.txt",
+      "mime": "text/plain"
+    }
+  ],
+  "document_codes": [
+    "PO",
+    "PI",
+    "CI",
+    "PL",
+    "COO",
+    "HC_COA",
+    "BL"
+  ],
+  "orders": [
+    {
+      "order_no": "25OL0004",
+      "folder_name": "25OL0004",
+      "folder_id": "1W4Z2FsmEiraJWFU-qxBWuu3-3gmw90bl",
+      "folder_url": "https://drive.google.com/drive/folders/1W4Z2FsmEiraJWFU-qxBWuu3-3gmw90bl",
+      "supplier": "Agro",
+      "customer": "東森",
+      "status": "文件缺件待追",
+      "file_count": 9,
+      "received": [
+        "PO",
+        "PI",
+        "CI"
+      ],
+      "missing": [
+        "PL",
+        "COO",
+        "HC_COA",
+        "BL"
+      ],
+      "files": [
+        {
+          "name": "CI 25OL0004 Agro GJ-NEXO.xlsx",
+          "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "id": "1_WdhTSPyWpJTX0oI-ltSgdyRBkff6rWQ",
+          "url": "https://drive.google.com/file/d/1_WdhTSPyWpJTX0oI-ltSgdyRBkff6rWQ/view"
+        },
+        {
+          "name": "CI 25OL0004 Agro NEXO-東森.xlsx",
+          "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "id": "1eVFLHIICmQGe66EK62eFhyOja_62yg9N",
+          "url": "https://drive.google.com/file/d/1eVFLHIICmQGe66EK62eFhyOja_62yg9N/view"
+        },
+        {
+          "name": "LC草稿PI-25OL0004-5NBADUL50068.pdf",
+          "mime": "application/pdf",
+          "id": "1t7KTBrR-etNAgmF5EbET7Ibuk5sCPC96",
+          "url": "https://drive.google.com/file/d/1t7KTBrR-etNAgmF5EbET7Ibuk5sCPC96/view"
+        },
+        {
+          "name": "NEXO給東森(PI)25OL0003-25OL0005-美味森市玄米油.xlsx",
+          "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "id": "1vfSs2Q4KdGgTg7yBg0ogswu6dXSLQ3wU",
+          "url": "https://drive.google.com/file/d/1vfSs2Q4KdGgTg7yBg0ogswu6dXSLQ3wU/view"
+        },
+        {
+          "name": "PI 25OL0004 Agro GJ-NEXO.xlsx",
+          "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "id": "1_AwFRPYNo6xx3UpPJRgwpFbbcsQTmiJC",
+          "url": "https://drive.google.com/file/d/1_AwFRPYNo6xx3UpPJRgwpFbbcsQTmiJC/view"
+        },
+        {
+          "name": "PO-25OL0004 NEXO-GJ.xlsx",
+          "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "id": "1HPiiycwEgUkfWEpnMskGovr6iMDLu3Qc",
+          "url": "https://drive.google.com/file/d/1HPiiycwEgUkfWEpnMskGovr6iMDLu3Qc/view"
+        },
+        {
+          "name": "PO25OL0004.pdf",
+          "mime": "application/pdf",
+          "id": "1eTWiR461gAaJl4Ln8FQ3JeB1-9oVEJps",
+          "url": "https://drive.google.com/file/d/1eTWiR461gAaJl4Ln8FQ3JeB1-9oVEJps/view"
+        },
+        {
+          "name": "東森回簽PI.pdf",
+          "mime": "application/pdf",
+          "id": "1-Uq9K9tIc17q0Xe0W720Qe-jod8CSlnd",
+          "url": "https://drive.google.com/file/d/1-Uq9K9tIc17q0Xe0W720Qe-jod8CSlnd/view"
+        },
+        {
+          "name": "泰國AGRO訂單25OL003-25OL0005.xlsx",
+          "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "id": "1eQDJLI6e6Gc3tI4qBpOHQ3BQv1eM8zkW",
+          "url": "https://drive.google.com/file/d/1eQDJLI6e6Gc3tI4qBpOHQ3BQv1eM8zkW/view"
+        }
+      ],
+      "note": "缺 PL、COO、HC_COA、BL"
+    },
+    {
+      "order_no": "25OL0005",
+      "folder_name": "25OL0005",
+      "folder_id": "1INSNVHy1DmSV6O67tNil8i3kCF2DtJgh",
+      "folder_url": "https://drive.google.com/drive/folders/1INSNVHy1DmSV6O67tNil8i3kCF2DtJgh",
+      "supplier": "Agro",
+      "customer": "東森",
+      "status": "文件缺件待追",
+      "file_count": 9,
+      "received": [
+        "PO",
+        "PI",
+        "CI"
+      ],
+      "missing": [
+        "PL",
+        "COO",
+        "HC_COA",
+        "BL"
+      ],
+      "files": [
+        {
+          "name": "25OL0005.pdf",
+          "mime": "application/pdf",
+          "id": "1SYC7LpAv3m6fFeiYzWYkA4AVl9xqmXux",
+          "url": "https://drive.google.com/file/d/1SYC7LpAv3m6fFeiYzWYkA4AVl9xqmXux/view"
+        },
+        {
+          "name": "CI 25OL0005 Agro GJ-NEXO.xlsx",
+          "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "id": "1opxqe6-XV5e7mU6Hyqbh4wbrc1RzfUsk",
+          "url": "https://drive.google.com/file/d/1opxqe6-XV5e7mU6Hyqbh4wbrc1RzfUsk/view"
+        },
+        {
+          "name": "CI 25OL0005 Agro NEXO-東森.xlsx",
+          "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "id": "1rfFVdVNWLJyk3PeajRjuOZCgfvdHAoMT",
+          "url": "https://drive.google.com/file/d/1rfFVdVNWLJyk3PeajRjuOZCgfvdHAoMT/view"
+        },
+        {
+          "name": "LC草稿PI-25OL0005-5NBADUL50069.pdf",
+          "mime": "application/pdf",
+          "id": "1F5YRJsGtLSQEokV65zYUCHcUEl_Y69am",
+          "url": "https://drive.google.com/file/d/1F5YRJsGtLSQEokV65zYUCHcUEl_Y69am/view"
+        },
+        {
+          "name": "NEXO給東森(PI)25OL0003-25OL0005-美味森市玄米油.xlsx",
+          "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "id": "1_Nl8P5OuAprbF3UXrGhS-UoPxLWAJSTT",
+          "url": "https://drive.google.com/file/d/1_Nl8P5OuAprbF3UXrGhS-UoPxLWAJSTT/view"
+        },
+        {
+          "name": "PI 25OL0005 Agro GJ-NEXO.xlsx",
+          "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "id": "1_HXZvL9mkIvZxQ8aiq1rzPuM8Kvwk4xz",
+          "url": "https://drive.google.com/file/d/1_HXZvL9mkIvZxQ8aiq1rzPuM8Kvwk4xz/view"
+        },
+        {
+          "name": "PO-25OL0005 NEXO-GJ.xlsx",
+          "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "id": "1obwwVk_eLxBn5KfLvsLe0-lrj6WJCumo",
+          "url": "https://drive.google.com/file/d/1obwwVk_eLxBn5KfLvsLe0-lrj6WJCumo/view"
+        },
+        {
+          "name": "東森回簽PI.pdf",
+          "mime": "application/pdf",
+          "id": "1cLeD_LfkZotuXkXFIkbf1FVvud3zMzJX",
+          "url": "https://drive.google.com/file/d/1cLeD_LfkZotuXkXFIkbf1FVvud3zMzJX/view"
+        },
+        {
+          "name": "泰國AGRO訂單25OL003-25OL0005.xlsx",
+          "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "id": "1XRa2k1KkYcJmaNs-glFCQ9VAWZMRD0jw",
+          "url": "https://drive.google.com/file/d/1XRa2k1KkYcJmaNs-glFCQ9VAWZMRD0jw/view"
+        }
+      ],
+      "note": "缺 PL、COO、HC_COA、BL"
+    },
+    {
+      "order_no": "26IC0001",
+      "folder_name": "26IC0001-G7冰淇淋_桂冠",
+      "folder_id": "11xLBWZ1TfAfEiTl87xfiV3OQFbK2rvD4",
+      "folder_url": "https://drive.google.com/drive/folders/11xLBWZ1TfAfEiTl87xfiV3OQFbK2rvD4",
+      "supplier": "G7",
+      "customer": "桂冠",
+      "status": "待PI",
+      "file_count": 4,
+      "received": [
+        "PO",
+        "BL"
+      ],
+      "missing": [
+        "PI",
+        "CI",
+        "PL",
+        "COO",
+        "HC_COA"
+      ],
+      "files": [
+        {
+          "name": "20260121高玉訂單(雙方用印).pdf",
+          "mime": "application/pdf",
+          "id": "1aMSzhrlU0oxjnCA3JfDWeCWvSmqMc9GI",
+          "url": "https://drive.google.com/file/d/1aMSzhrlU0oxjnCA3JfDWeCWvSmqMc9GI/view"
+        },
+        {
+          "name": "GJ給TDS訂單 G7 26IC0001.xlsx",
+          "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "id": "1ZuBB1-sTkboxuSCfE97iipG0_oj7gsYi",
+          "url": "https://drive.google.com/file/d/1ZuBB1-sTkboxuSCfE97iipG0_oj7gsYi/view"
+        },
+        {
+          "name": "HBL MI.26.200082.PDF",
+          "mime": "application/pdf",
+          "id": "1-r7JhxoiL9zeTiBrLyHWdhfoWA-8uMH6",
+          "url": "https://drive.google.com/file/d/1-r7JhxoiL9zeTiBrLyHWdhfoWA-8uMH6/view"
+        },
+        {
+          "name": "TDS給G7訂單PO - 18868215  (G7).pdf",
+          "mime": "application/pdf",
+          "id": "1NBWlG11l9G8doemu698S960Ku4xBAnB6",
+          "url": "https://drive.google.com/file/d/1NBWlG11l9G8doemu698S960Ku4xBAnB6/view"
+        }
+      ],
+      "note": "缺 PI、CI、PL、COO、HC_COA"
+    },
+    {
+      "order_no": "SM260414",
+      "folder_name": "SM260414-26FA0004",
+      "folder_id": "1sZV5EhtKRZEPEjOC-zK3iDG_jJaGW5Ge",
+      "folder_url": "https://drive.google.com/drive/folders/1sZV5EhtKRZEPEjOC-zK3iDG_jJaGW5Ge",
+      "supplier": "C&F",
+      "customer": "美廉",
+      "status": "文件缺件待追",
+      "file_count": 15,
+      "received": [
+        "PO",
+        "PI",
+        "CI",
+        "PL",
+        "COO",
+        "BL"
+      ],
+      "missing": [
+        "HC_COA"
+      ],
+      "files": [
+        {
+          "name": "CI SM260414 C\\&F GJ-Nexo.pdf",
+          "mime": "application/pdf",
+          "id": "1dE8KZmqdKDbhr8D7tt3eSfRi1kqCbBRp",
+          "url": "https://drive.google.com/file/d/1dE8KZmqdKDbhr8D7tt3eSfRi1kqCbBRp/view"
+        },
+        {
+          "name": "CI SM260414 C\\&F NEXO-SM.pdf",
+          "mime": "application/pdf",
+          "id": "1ooJDH50jo8XjyoiOWTUHd1JfR3uKOKMO",
+          "url": "https://drive.google.com/file/d/1ooJDH50jo8XjyoiOWTUHd1JfR3uKOKMO/view"
+        },
+        {
+          "name": "DRAFT CI-ORD0017838.pdf",
+          "mime": "application/pdf",
+          "id": "1VvstqSmy6wSqOmLJX8FpKI9sTwMgROxv",
+          "url": "https://drive.google.com/file/d/1VvstqSmy6wSqOmLJX8FpKI9sTwMgROxv/view"
+        },
+        {
+          "name": "DRAFT COO-ORD0017838.pdf",
+          "mime": "application/pdf",
+          "id": "1ETjIfY9Wcl8XkB0ZTecgzy_mvjpZSnzQ",
+          "url": "https://drive.google.com/file/d/1ETjIfY9Wcl8XkB0ZTecgzy_mvjpZSnzQ/view"
+        },
+        {
+          "name": "DRAFT PL-ORD0017383 exp.pdf",
+          "mime": "application/pdf",
+          "id": "1KALmxxLnhmzKIUSAHP0pUpICHGOqC8tZ",
+          "url": "https://drive.google.com/file/d/1KALmxxLnhmzKIUSAHP0pUpICHGOqC8tZ/view"
+        },
+        {
+          "name": "FINAL出貨文件(CI+PL+BL+COO) SM260414 C\\&F_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1d2RhNrQW70rvEgFq0MtR1YUCfB9LVlgM",
+          "url": "https://drive.google.com/file/d/1d2RhNrQW70rvEgFq0MtR1YUCfB9LVlgM/view"
+        },
+        {
+          "name": "GJ給C\\&F廠商訂單 SM260414.xlsx",
+          "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "id": "1W8CJQmmPfY6k4jU8JJQC-QRe_CCb4I70",
+          "url": "https://drive.google.com/file/d/1W8CJQmmPfY6k4jU8JJQC-QRe_CCb4I70/view"
+        },
+        {
+          "name": "PI SM260414 C\\&F GJ-Nexo.pdf",
+          "mime": "application/pdf",
+          "id": "1cMqnhMt6V2IJA4NmojdmbqZy7agxdHhx",
+          "url": "https://drive.google.com/file/d/1cMqnhMt6V2IJA4NmojdmbqZy7agxdHhx/view"
+        },
+        {
+          "name": "PI SM260414 C\\&F NEXO-SM revised.pdf",
+          "mime": "application/pdf",
+          "id": "1obMs9mT3bNsLnChjBtY-QqX3nuTkxyEC",
+          "url": "https://drive.google.com/file/d/1obMs9mT3bNsLnChjBtY-QqX3nuTkxyEC/view"
+        },
+        {
+          "name": "PI-ORD0017383.pdf",
+          "mime": "application/pdf",
+          "id": "1UjhrWW_6ZpaKbLdR_Rmd18qbiiWq_nco",
+          "url": "https://drive.google.com/file/d/1UjhrWW_6ZpaKbLdR_Rmd18qbiiWq_nco/view"
+        },
+        {
+          "name": "PL SM260414 C\\&F GJ-Nexo.pdf",
+          "mime": "application/pdf",
+          "id": "1DQcs-9TcOM9Zd6LdpMcUAmowC2wpgJXS",
+          "url": "https://drive.google.com/file/d/1DQcs-9TcOM9Zd6LdpMcUAmowC2wpgJXS/view"
+        },
+        {
+          "name": "PL SM260414 C\\&F NEXO-SM.pdf",
+          "mime": "application/pdf",
+          "id": "1gdtX_w8J94yPfTn7YUQI7ZtTV_1_42r0",
+          "url": "https://drive.google.com/file/d/1gdtX_w8J94yPfTn7YUQI7ZtTV_1_42r0/view"
+        },
+        {
+          "name": "PO-SM-260414 C\\&F NEXO-GJ.pdf",
+          "mime": "application/pdf",
+          "id": "1LeBEgh6QLBebNI4jpSk3l0lmTE1coQFs",
+          "url": "https://drive.google.com/file/d/1LeBEgh6QLBebNI4jpSk3l0lmTE1coQFs/view"
+        },
+        {
+          "name": "PO-SM-260414+ 260415.pdf",
+          "mime": "application/pdf",
+          "id": "1OCwSGwPZb_ayNICv-MqJ3osgSU8Z384B",
+          "url": "https://drive.google.com/file/d/1OCwSGwPZb_ayNICv-MqJ3osgSU8Z384B/view"
+        },
+        {
+          "name": "美廉給NEXO訂單 PO-SM-260414+ 260415.pdf",
+          "mime": "application/pdf",
+          "id": "1TSZ5HlFd10B2K_mUfSZt3MO58ktY78QD",
+          "url": "https://drive.google.com/file/d/1TSZ5HlFd10B2K_mUfSZt3MO58ktY78QD/view"
+        }
+      ],
+      "note": "缺 HC_COA"
+    },
+    {
+      "order_no": "SM260415",
+      "folder_name": "SM260415-26FA0005",
+      "folder_id": "1iFr5RMoxXbqcMGEVFc8q0FBZ2vfgIvGr",
+      "folder_url": "https://drive.google.com/drive/folders/1iFr5RMoxXbqcMGEVFc8q0FBZ2vfgIvGr",
+      "supplier": "C&F",
+      "customer": "美廉",
+      "status": "文件缺件待追",
+      "file_count": 9,
+      "received": [
+        "PO",
+        "PI",
+        "CI",
+        "PL"
+      ],
+      "missing": [
+        "COO",
+        "HC_COA",
+        "BL"
+      ],
+      "files": [
+        {
+          "name": "CI_GJ-NEXO_SM-260415_小T.pdf",
+          "mime": "application/pdf",
+          "id": "143TYK4GLd_pjo29auDQijYd3UipVsjxy",
+          "url": "https://drive.google.com/file/d/143TYK4GLd_pjo29auDQijYd3UipVsjxy/view"
+        },
+        {
+          "name": "CI_NEXO-SM_SM-260415_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1pMNFUBhi3zVjBLNcKob5acVJ5_XVkAW1",
+          "url": "https://drive.google.com/file/d/1pMNFUBhi3zVjBLNcKob5acVJ5_XVkAW1/view"
+        },
+        {
+          "name": "GJ給C\\&F廠商訂單SM260415.xlsx",
+          "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "id": "1Tl4aPxATwKwF-ksPaMmjjd8UYqjkPfNG",
+          "url": "https://drive.google.com/file/d/1Tl4aPxATwKwF-ksPaMmjjd8UYqjkPfNG/view"
+        },
+        {
+          "name": "PI_GJ-NEXO_SM-260415_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1AV5nvp-JFXQtVpIH6MTgq2Y5BQBXNHJs",
+          "url": "https://drive.google.com/file/d/1AV5nvp-JFXQtVpIH6MTgq2Y5BQBXNHJs/view"
+        },
+        {
+          "name": "PI_NEXO-SM_SM-260415_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1iqXXiKdtY1UHPgecuJRdmeevATRz4232",
+          "url": "https://drive.google.com/file/d/1iqXXiKdtY1UHPgecuJRdmeevATRz4232/view"
+        },
+        {
+          "name": "PL_GJ-NEXO_SM-260415_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1pqFX2ioyyNtvh6xvP-A0gcIXbt4yv7yn",
+          "url": "https://drive.google.com/file/d/1pqFX2ioyyNtvh6xvP-A0gcIXbt4yv7yn/view"
+        },
+        {
+          "name": "PL_NEXO-SM_SM-260415_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1UaEOkiWWxIOvYOokTr4VFyFW-ymStnhl",
+          "url": "https://drive.google.com/file/d/1UaEOkiWWxIOvYOokTr4VFyFW-ymStnhl/view"
+        },
+        {
+          "name": "PO_NEXO-GJ_SM-260415_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1Q4RJRtMKXzDkOIeIIuEy1be506mqP1Ld",
+          "url": "https://drive.google.com/file/d/1Q4RJRtMKXzDkOIeIIuEy1be506mqP1Ld/view"
+        },
+        {
+          "name": "美廉給NEXO訂單PO-SM-260414+ 260415.pdf",
+          "mime": "application/pdf",
+          "id": "12qZFB__A-Plwqqnbn54esp8ugDySJHYk",
+          "url": "https://drive.google.com/file/d/12qZFB__A-Plwqqnbn54esp8ugDySJHYk/view"
+        }
+      ],
+      "note": "缺 COO、HC_COA、BL"
+    },
+    {
+      "order_no": "SM260435",
+      "folder_name": "SM260435-26FA0006",
+      "folder_id": "1xGmbJr6M2ULOGAWGnUl9nKLJ-THA8Tbi",
+      "folder_url": "https://drive.google.com/drive/folders/1xGmbJr6M2ULOGAWGnUl9nKLJ-THA8Tbi",
+      "supplier": "Go Bites",
+      "customer": "美廉",
+      "status": "文件缺件待追",
+      "file_count": 10,
+      "received": [
+        "PO",
+        "PI",
+        "CI",
+        "PL"
+      ],
+      "missing": [
+        "COO",
+        "HC_COA",
+        "BL"
+      ],
+      "files": [
+        {
+          "name": "CI_GJ-NEXO_SM-260435_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1dpSAvIVY9WW8sM-Y55p0RClTxgcrrKwa",
+          "url": "https://drive.google.com/file/d/1dpSAvIVY9WW8sM-Y55p0RClTxgcrrKwa/view"
+        },
+        {
+          "name": "CI_NEXO-SM_SM-260435_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1Dn39tJV7vPEP92x1RWE-NhKzHO-pd1vc",
+          "url": "https://drive.google.com/file/d/1Dn39tJV7vPEP92x1RWE-NhKzHO-pd1vc/view"
+        },
+        {
+          "name": "GJ給廠商訂單-馬來西亞Go Bites.xlsx",
+          "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "id": "1AHKb-YH48-hWfe6Patsq2gJMc4QPP_w0",
+          "url": "https://drive.google.com/file/d/1AHKb-YH48-hWfe6Patsq2gJMc4QPP_w0/view"
+        },
+        {
+          "name": "PI_GJ-NEXO_SM-260435_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1iO6Y0fym4ygVPRaB-a_rRuIUxxzqqr0V",
+          "url": "https://drive.google.com/file/d/1iO6Y0fym4ygVPRaB-a_rRuIUxxzqqr0V/view"
+        },
+        {
+          "name": "PI_NEXO-SM_SM-260435_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1yZHyawsaJGyxacSf4U7JjPRgvwZlcz3u",
+          "url": "https://drive.google.com/file/d/1yZHyawsaJGyxacSf4U7JjPRgvwZlcz3u/view"
+        },
+        {
+          "name": "PI_工廠ORD0017421_SM-260435_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1v4C0W1NmOvmefxycZdC17yfBDK5K7xNA",
+          "url": "https://drive.google.com/file/d/1v4C0W1NmOvmefxycZdC17yfBDK5K7xNA/view"
+        },
+        {
+          "name": "PL_GJ-NEXO_SM-260435_小T.pdf",
+          "mime": "application/pdf",
+          "id": "12S76GiaagZ8wrtMPK2_nfLcjugX-IIrl",
+          "url": "https://drive.google.com/file/d/12S76GiaagZ8wrtMPK2_nfLcjugX-IIrl/view"
+        },
+        {
+          "name": "PL_NEXO-SM_SM-260435_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1erhM0RriJ-3dMJp_sH9gbeE-Afg-Dqyn",
+          "url": "https://drive.google.com/file/d/1erhM0RriJ-3dMJp_sH9gbeE-Afg-Dqyn/view"
+        },
+        {
+          "name": "PO_NEXO-GJ_SM-260435_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1muRi4CwIU8BnFQETFRwD_5qRuObQcXj8",
+          "url": "https://drive.google.com/file/d/1muRi4CwIU8BnFQETFRwD_5qRuObQcXj8/view"
+        },
+        {
+          "name": "美廉給NEXO訂單611557633643774124_PO-SM-260435.pdf",
+          "mime": "application/pdf",
+          "id": "1KTJd38sSp-5tJP76o5O5fX0pDDl7MHHP",
+          "url": "https://drive.google.com/file/d/1KTJd38sSp-5tJP76o5O5fX0pDDl7MHHP/view"
+        }
+      ],
+      "note": "缺 COO、HC_COA、BL"
+    },
+    {
+      "order_no": "SM260444",
+      "folder_name": "SM260444-26FA0007",
+      "folder_id": "14Eu9pnVM2-3ejFH7Q1BN73ANA_cDCKWd",
+      "folder_url": "https://drive.google.com/drive/folders/14Eu9pnVM2-3ejFH7Q1BN73ANA_cDCKWd",
+      "supplier": "Go Bites",
+      "customer": "美廉",
+      "status": "文件缺件待追",
+      "file_count": 10,
+      "received": [
+        "PO",
+        "PI",
+        "CI",
+        "PL"
+      ],
+      "missing": [
+        "COO",
+        "HC_COA",
+        "BL"
+      ],
+      "files": [
+        {
+          "name": "CI_GJ-NEXO_SM-260444_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1KGdsCNJBuUCCNBIHQEU-8YltMvPneMhu",
+          "url": "https://drive.google.com/file/d/1KGdsCNJBuUCCNBIHQEU-8YltMvPneMhu/view"
+        },
+        {
+          "name": "CI_NEXO-SM_SM-260444_小T.pdf",
+          "mime": "application/pdf",
+          "id": "14TxDJ01xfwF7Zq0SqyjecLrVkvG_4hei",
+          "url": "https://drive.google.com/file/d/14TxDJ01xfwF7Zq0SqyjecLrVkvG_4hei/view"
+        },
+        {
+          "name": "GJ給廠商訂單-馬來西亞Go Bites.xlsx",
+          "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "id": "1hHwlP__p8Zr1GnHhw16m_Cmc1HBblNC9",
+          "url": "https://drive.google.com/file/d/1hHwlP__p8Zr1GnHhw16m_Cmc1HBblNC9/view"
+        },
+        {
+          "name": "PI_GJ-NEXO_SM-260444_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1IlHkWnmzTS_Wl0Bnice6kE8v0tHQB9mg",
+          "url": "https://drive.google.com/file/d/1IlHkWnmzTS_Wl0Bnice6kE8v0tHQB9mg/view"
+        },
+        {
+          "name": "PI_NEXO-SM_SM-260444_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1VI7Ki01cWXq5LHgP62fkepS_OSYpFAy8",
+          "url": "https://drive.google.com/file/d/1VI7Ki01cWXq5LHgP62fkepS_OSYpFAy8/view"
+        },
+        {
+          "name": "PI_工廠ORD0017422_SM-260444_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1kkx_zRQbknkY-O0IuBQWWOpwNJVP97Yz",
+          "url": "https://drive.google.com/file/d/1kkx_zRQbknkY-O0IuBQWWOpwNJVP97Yz/view"
+        },
+        {
+          "name": "PL_GJ-NEXO_SM-260444_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1ovBYlqbEsB4VSXXd_RoiljVvRXUxlwNV",
+          "url": "https://drive.google.com/file/d/1ovBYlqbEsB4VSXXd_RoiljVvRXUxlwNV/view"
+        },
+        {
+          "name": "PL_NEXO-SM_SM-260444_小T.pdf",
+          "mime": "application/pdf",
+          "id": "19K4b72z3h4WR2fVV23bXqvJKkb-kbebr",
+          "url": "https://drive.google.com/file/d/19K4b72z3h4WR2fVV23bXqvJKkb-kbebr/view"
+        },
+        {
+          "name": "PO_NEXO-GJ_SM-260444_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1Bmod6cxHvS5HV4s-1Bg2N3igDV2imDcj",
+          "url": "https://drive.google.com/file/d/1Bmod6cxHvS5HV4s-1Bg2N3igDV2imDcj/view"
+        },
+        {
+          "name": "美廉給NEXO訂單80AACE4DF90B59406D441B4B807CBAA0F55E26DD_PO-SM-260444.pdf",
+          "mime": "application/pdf",
+          "id": "1LnuEjf0J61B8ChqtvVY0nakfmtimI36o",
+          "url": "https://drive.google.com/file/d/1LnuEjf0J61B8ChqtvVY0nakfmtimI36o/view"
+        }
+      ],
+      "note": "缺 COO、HC_COA、BL"
+    },
+    {
+      "order_no": "SM260515",
+      "folder_name": "SM260515-26FA0008",
+      "folder_id": "1bC6w6X9SlRKnjmTqiqzoVh8s0COtoWru",
+      "folder_url": "https://drive.google.com/drive/folders/1bC6w6X9SlRKnjmTqiqzoVh8s0COtoWru",
+      "supplier": "Mas Choices",
+      "customer": "美廉",
+      "status": "文件缺件待追",
+      "file_count": 10,
+      "received": [
+        "PO",
+        "PI",
+        "CI",
+        "PL"
+      ],
+      "missing": [
+        "COO",
+        "HC_COA",
+        "BL"
+      ],
+      "files": [
+        {
+          "name": "CI_GJ-NEXO_SM-260515_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1uNq1WLFOnOSjhT62OHsPQV_7Rk18trYQ",
+          "url": "https://drive.google.com/file/d/1uNq1WLFOnOSjhT62OHsPQV_7Rk18trYQ/view"
+        },
+        {
+          "name": "CI_NEXO-SM_SM-260515_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1afZmmUpnyxXr7uQRYcafUaQ7Y_Bqzq_y",
+          "url": "https://drive.google.com/file/d/1afZmmUpnyxXr7uQRYcafUaQ7Y_Bqzq_y/view"
+        },
+        {
+          "name": "PI SM260515 Maschoices GJ-NEXO.pdf",
+          "mime": "application/pdf",
+          "id": "1C6oIf-84jwxlmXdpRbawMXs7br9FvJAC",
+          "url": "https://drive.google.com/file/d/1C6oIf-84jwxlmXdpRbawMXs7br9FvJAC/view"
+        },
+        {
+          "name": "PI SM260515 Maschoices NEXO-SM.pdf",
+          "mime": "application/pdf",
+          "id": "1lzedO6UkqHWe12Ud7FpU5tDjEAsBKYUL",
+          "url": "https://drive.google.com/file/d/1lzedO6UkqHWe12Ud7FpU5tDjEAsBKYUL/view"
+        },
+        {
+          "name": "PI-工廠給GJ PI 27133-26 Golden Jade Tongol Flake 180g Oil\\&Brine(Broth) June.pdf",
+          "mime": "application/pdf",
+          "id": "1Ps4zpBt87EIGhPqiih6JZYkvXkvvSGHD",
+          "url": "https://drive.google.com/file/d/1Ps4zpBt87EIGhPqiih6JZYkvXkvvSGHD/view"
+        },
+        {
+          "name": "PL_GJ-NEXO_SM-260515_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1GK477SbYeGiDSRSxzwWkjUbHz2kNbJ0x",
+          "url": "https://drive.google.com/file/d/1GK477SbYeGiDSRSxzwWkjUbHz2kNbJ0x/view"
+        },
+        {
+          "name": "PL_NEXO-SM_SM-260515_小T.pdf",
+          "mime": "application/pdf",
+          "id": "12ryzmG2wsdURi2tdIk07uyXz2NzKHYaH",
+          "url": "https://drive.google.com/file/d/12ryzmG2wsdURi2tdIk07uyXz2NzKHYaH/view"
+        },
+        {
+          "name": "PO_NEXO-GJ_SM-260515_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1TOvNPDa5lMnluIRuTXtl-iNijRxHJ5bN",
+          "url": "https://drive.google.com/file/d/1TOvNPDa5lMnluIRuTXtl-iNijRxHJ5bN/view"
+        },
+        {
+          "name": "PO- GJ給工廠泰國 MasChoices.pdf",
+          "mime": "application/pdf",
+          "id": "1Cs8LtwTlruDvehB5--jwNJddTSYnnUIP",
+          "url": "https://drive.google.com/file/d/1Cs8LtwTlruDvehB5--jwNJddTSYnnUIP/view"
+        },
+        {
+          "name": "PO-美廉給NEXO PO#SM-260515.pdf",
+          "mime": "application/pdf",
+          "id": "1vsPRq3R7gOk_dw8-k1lYZOIEU0pnYwlO",
+          "url": "https://drive.google.com/file/d/1vsPRq3R7gOk_dw8-k1lYZOIEU0pnYwlO/view"
+        }
+      ],
+      "note": "缺 COO、HC_COA、BL"
+    },
+    {
+      "order_no": "SM260531",
+      "folder_name": "SM260531-26FA0009",
+      "folder_id": "1SiLGQzsDlnSRWjrbRNGl3riAY_rWJZtH",
+      "folder_url": "https://drive.google.com/drive/folders/1SiLGQzsDlnSRWjrbRNGl3riAY_rWJZtH",
+      "supplier": "待確認",
+      "customer": "美廉",
+      "status": "文件缺件待追",
+      "file_count": 6,
+      "received": [
+        "PO",
+        "PI"
+      ],
+      "missing": [
+        "CI",
+        "PL",
+        "COO",
+        "HC_COA",
+        "BL"
+      ],
+      "files": [
+        {
+          "name": "PI_GJ-NEXO_SM-260531_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1ncs3AiTGJmxoCs8Xw8D4VKDjWW5FB8Rt",
+          "url": "https://drive.google.com/file/d/1ncs3AiTGJmxoCs8Xw8D4VKDjWW5FB8Rt/view"
+        },
+        {
+          "name": "PI_NEXO-SM_SM-260531_小T.pdf",
+          "mime": "application/pdf",
+          "id": "19cqxXhdfpX6kdN_PjPgnw-0qfErxYsLe",
+          "url": "https://drive.google.com/file/d/19cqxXhdfpX6kdN_PjPgnw-0qfErxYsLe/view"
+        },
+        {
+          "name": "PO 美廉訂單Document_260611_173109-SM-260531.pdf",
+          "mime": "application/pdf",
+          "id": "1pTnAMXUoEoLq8yqOsIQi6kzXibmgbqDq",
+          "url": "https://drive.google.com/file/d/1pTnAMXUoEoLq8yqOsIQi6kzXibmgbqDq/view"
+        },
+        {
+          "name": "PO_NEXO-GJ_SM-260531_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1nORL68w7emzioVOTRh_7ujyYzg5lqUN2",
+          "url": "https://drive.google.com/file/d/1nORL68w7emzioVOTRh_7ujyYzg5lqUN2/view"
+        },
+        {
+          "name": "PO-GJ給工廠_26FA0009.pdf",
+          "mime": "application/pdf",
+          "id": "1g24SmQ5_J4X2AvupfqftGg0bgFiYelxZ",
+          "url": "https://drive.google.com/file/d/1g24SmQ5_J4X2AvupfqftGg0bgFiYelxZ/view"
+        },
+        {
+          "name": "PO-美廉給NEXO_SM-260531_小T.pdf",
+          "mime": "application/pdf",
+          "id": "1nzhvsHO_027TF-9Uuho4E6VIOZvGQwNI",
+          "url": "https://drive.google.com/file/d/1nzhvsHO_027TF-9Uuho4E6VIOZvGQwNI/view"
+        }
+      ],
+      "note": "缺 CI、PL、COO、HC_COA、BL"
+    }
+  ]
+}
