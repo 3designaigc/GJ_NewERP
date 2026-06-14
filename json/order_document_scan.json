@@ -726,17 +726,17 @@
       "folder_name": "SM260531-26FA0009",
       "folder_id": "1SiLGQzsDlnSRWjrbRNGl3riAY_rWJZtH",
       "folder_url": "https://drive.google.com/drive/folders/1SiLGQzsDlnSRWjrbRNGl3riAY_rWJZtH",
-      "supplier": "待確認",
+      "supplier": "S.RUAMTHAI",
       "customer": "美廉",
-      "status": "文件缺件待追",
+      "status": "CI/PL草稿已建立，待出貨資料",
       "file_count": 6,
       "received": [
         "PO",
-        "PI"
+        "PI",
+        "CI_DRAFT",
+        "PL_DRAFT"
       ],
       "missing": [
-        "CI",
-        "PL",
         "COO",
         "HC_COA",
         "BL"
@@ -779,7 +779,29 @@
           "url": "https://drive.google.com/file/d/1nzhvsHO_027TF-9Uuho4E6VIOZvGQwNI/view"
         }
       ],
-      "note": "缺 CI、PL、COO、HC_COA、BL"
+      "draft_files": [
+        {
+          "name": "CI_GJ-NEXO_SM-260531_Coco.pdf",
+          "local_path": "generated_documents/SM260531-26FA0009/CI_GJ-NEXO_SM-260531_Coco.pdf",
+          "status": "draft"
+        },
+        {
+          "name": "CI_NEXO-SM_SM-260531_Coco.pdf",
+          "local_path": "generated_documents/SM260531-26FA0009/CI_NEXO-SM_SM-260531_Coco.pdf",
+          "status": "draft"
+        },
+        {
+          "name": "PL_GJ-NEXO_SM-260531_Coco.pdf",
+          "local_path": "generated_documents/SM260531-26FA0009/PL_GJ-NEXO_SM-260531_Coco.pdf",
+          "status": "draft"
+        },
+        {
+          "name": "PL_NEXO-SM_SM-260531_Coco.pdf",
+          "local_path": "generated_documents/SM260531-26FA0009/PL_NEXO-SM_SM-260531_Coco.pdf",
+          "status": "draft"
+        }
+      ],
+      "note": "CI/PL Coco草稿已建立；COO、HC/COA、BL待出船或出貨資料到齊後補FINAL"
     }
   ]
 }
