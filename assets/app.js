@@ -116,7 +116,7 @@ const procurementModeConfig = {
     title: "台幣到倉買進 / 寄倉訂單草稿",
     subtitle: "買進/寄倉",
     poType: "Landed Cost Purchase Order",
-    paymentRule: "Feast: BL+65；Europastry: BL+60；VIRU: 50% PO + 50% BL。",
+    paymentRule: "Feast/G7: 透過 TDS，BL+65；Europastry: BL+60；VIRU: 50% PO + 50% BL。",
     cashflowRule: "先核算台幣到倉成本，再建立採購、庫存、應付與後續銷售底線。",
     supplierInstruction: "確認 EXW/FOB/CIF 基準、冷凍溫層、箱/板、BBD 與到倉成本公式。",
     documentNote: "冷凍與到倉價文件需含溫層、效期、棧板、CI、PL、COO、HC / COA、B/L。",
@@ -434,6 +434,16 @@ function procurementConfigFor(row, category) {
   if (category !== "D") return base;
   const supplier = String(row["供應商"] || "");
   if (supplier.includes("Feast")) return { ...base, paymentRule: "Feast 透過 TDS，應付 BL + 65。" };
+  if (supplier === "G7") {
+    return {
+      ...base,
+      title: "G7 透過 TDS 買進訂單草稿",
+      poType: "G7 via TDS Purchase Order",
+      paymentRule: "G7 走 Feast 模式：高玉透過 TDS 採購，應付 BL + 65。",
+      cashflowRule: "G7 不套 C 類 NEXO 留利；以透過 TDS 買進處理，建立採購與應付 BL+65。",
+      supplierInstruction: "請依 TDS 採購窗口確認 G7 價格、箱數、交期與 PI；付款節點比照 Feast BL+65。",
+    };
+  }
   if (supplier.includes("Europastry")) return { ...base, paymentRule: "Europastry 直採，應付 BL + 60。" };
   if (supplier.includes("VIRU")) return { ...base, paymentRule: "VIRU 直採，50% PO + 50% BL。" };
   return base;
