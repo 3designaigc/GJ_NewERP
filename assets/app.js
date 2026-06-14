@@ -26,6 +26,7 @@ const users = {
       suppliers: false,
       supplierSensitive: false,
       tracking: false,
+      productScope: "frozen_or_costco",
     },
   },
   manager: {
@@ -42,6 +43,7 @@ const users = {
       suppliers: false,
       supplierSensitive: false,
       tracking: true,
+      productScope: "all",
     },
   },
   owner: {
@@ -58,6 +60,7 @@ const users = {
       suppliers: true,
       supplierSensitive: true,
       tracking: true,
+      productScope: "all",
     },
   },
 };
@@ -99,6 +102,17 @@ function productKeyFromValues(supplierCode, name, spec) {
 
 function productKey(row) {
   return productKeyFromValues(row["供應商編號"], row["中文品名"], row["規格"]);
+}
+
+function isCostcoProject(row) {
+  return String(row["適用通路"] || "").includes("好市多");
+}
+
+function visibleProducts() {
+  if (state.currentUser?.permissions?.productScope === "frozen_or_costco") {
+    return state.products.filter((row) => row["型態"] === "冷凍" || isCostcoProject(row));
+  }
+  return state.products;
 }
 
 function text(value) {
@@ -205,7 +219,7 @@ function renderDashboard() {
   const payable = state.cashflow.filter((row) => row.type === "應付").reduce((sum, row) => sum + Number(row.twd_amt || 0), 0);
   const receivable = state.cashflow.filter((row) => row.type === "應收").reduce((sum, row) => sum + Number(row.twd_amt || 0), 0);
   const metrics = [
-    ["商品", state.products.length],
+    ["商品", visibleProducts().length],
     ["供應商", state.suppliers.length],
     ["PO追蹤", state.docChecks.length + state.docTracks.length + state.shipments.length],
     ["TDS待辦", state.tasks.length],
@@ -230,7 +244,7 @@ function renderProducts() {
   const keyword = $("productSearch").value;
   const type = $("productTypeFilter").value;
   const status = $("productStatusFilter").value;
-  const rows = state.products.filter(
+  const rows = visibleProducts().filter(
     (row) =>
       (!type || row["型態"] === type) &&
       (!status || row["狀態"] === status) &&
@@ -448,6 +462,15 @@ function bindEvents() {
   $("trackingSearch").addEventListener("input", renderTracking);
 }
 
+function populateFilters() {
+  $("productTypeFilter").innerHTML = uniqueOptions(visibleProducts(), "型態", "全部型態");
+  $("productStatusFilter").innerHTML = uniqueOptions(visibleProducts(), "狀態", "全部狀態");
+  $("supplierTypeFilter").innerHTML = uniqueOptions(state.suppliers, "型態", "全部型態");
+  $("orderMonthFilter").innerHTML = uniqueOptions(state.cashflow, "ym", "全部月份");
+  $("cashflowTypeFilter").innerHTML = uniqueOptions(state.cashflow, "type", "全部類型");
+  $("cashflowCurrencyFilter").innerHTML = uniqueOptions(state.cashflow, "currency", "全部幣別");
+}
+
 function applyPermissions() {
   document.querySelectorAll("[data-permission]").forEach((element) => {
     const permission = element.dataset.permission;
@@ -473,6 +496,7 @@ function handleLogin(event) {
   $("loginError").textContent = "";
   $("loginScreen").classList.add("hidden");
   $("appShell").classList.remove("hidden");
+  populateFilters();
   renderAll();
   setView("dashboard");
 }
@@ -498,14 +522,11 @@ async function init() {
   try {
     bindEvents();
     await loadData();
-    $("productTypeFilter").innerHTML = uniqueOptions(state.products, "型態", "全部型態");
-    $("productStatusFilter").innerHTML = uniqueOptions(state.products, "狀態", "全部狀態");
-    $("supplierTypeFilter").innerHTML = uniqueOptions(state.suppliers, "型態", "全部型態");
-    $("orderMonthFilter").innerHTML = uniqueOptions(state.cashflow, "ym", "全部月份");
-    $("cashflowTypeFilter").innerHTML = uniqueOptions(state.cashflow, "type", "全部類型");
-    $("cashflowCurrencyFilter").innerHTML = uniqueOptions(state.cashflow, "currency", "全部幣別");
     restoreLogin();
-    if (state.currentUser) renderAll();
+    if (state.currentUser) {
+      populateFilters();
+      renderAll();
+    }
     $("loadStatus").textContent = "資料已載入";
     $("loadStatus").className = "status ok";
     $("viewSubtitle").textContent = "主檔資料量、交易模式與待辦狀態";
