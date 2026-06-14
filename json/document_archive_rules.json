@@ -3,7 +3,9 @@
   "_更新": "2026-06-15",
   "drive_root": {
     "name": "供應鏈 / 訂單文件",
-    "status": "等待Google Drive資料夾連結或Folder ID",
+    "folder_id": "1n1i14LmsqNTiH64vH7mXWYudFRRl-ipo",
+    "url": "https://drive.google.com/drive/folders/1n1i14LmsqNTiH64vH7mXWYudFRRl-ipo",
+    "status": "已提供資料夾連結；目前讀取時導向Google登入頁，等待開放知道連結者可檢視或提供可讀取授權",
     "visible_examples": [
       "..已完成（收款流程結束）",
       "25OL0004",
