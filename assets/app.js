@@ -8,6 +8,7 @@ const state = {
   docTracks: [],
   shipments: [],
   currentUser: null,
+  salesQuoteMap: new Map(),
 };
 
 const users = {
@@ -18,9 +19,13 @@ const users = {
     roleLabel: "業務",
     permissions: {
       costs: false,
+      quote: true,
+      quoteFloor: true,
       cashflow: false,
+      orderAnalysis: true,
+      suppliers: false,
       supplierSensitive: false,
-      tracking: true,
+      tracking: false,
     },
   },
   manager: {
@@ -29,8 +34,12 @@ const users = {
     role: "manager",
     roleLabel: "業務主管",
     permissions: {
-      costs: true,
-      cashflow: true,
+      costs: false,
+      quote: false,
+      quoteFloor: true,
+      cashflow: false,
+      orderAnalysis: false,
+      suppliers: false,
       supplierSensitive: false,
       tracking: true,
     },
@@ -42,7 +51,11 @@ const users = {
     roleLabel: "本人",
     permissions: {
       costs: true,
+      quote: true,
+      quoteFloor: true,
       cashflow: true,
+      orderAnalysis: true,
+      suppliers: true,
       supplierSensitive: true,
       tracking: true,
     },
@@ -52,6 +65,7 @@ const users = {
 const files = {
   products: "json/products_final.json",
   productTech: "json/product_tech.json",
+  sales: "json/sales_d3.json",
   suppliers: "json/supplier_master.json",
   cashflow: "json/cashflow_base.json",
   tasks: "json/TDS待辦追蹤.json",
@@ -64,6 +78,7 @@ const viewMeta = {
   dashboard: ["總覽", "主檔資料量、交易模式與待辦狀態"],
   products: ["商品", "商品主檔、成本、狀態與報價基礎"],
   suppliers: ["供應商", "供應商條件、聯絡與付款基礎資料"],
+  orderAnalysis: ["訂單分析", "PO、客戶、供應商、商品與預估日期"],
   cashflow: ["現金流", "應收、應付、PO 與預估日期"],
   tracking: ["PO追蹤", "文件核對、文件追蹤、船班與 TDS 待辦"],
 };
@@ -76,6 +91,14 @@ function can(permission) {
 
 function mask(value) {
   return can("costs") ? value : "權限不足";
+}
+
+function productKeyFromValues(supplierCode, name, spec) {
+  return [supplierCode || "", name || "", spec || ""].join("::");
+}
+
+function productKey(row) {
+  return productKeyFromValues(row["供應商編號"], row["中文品名"], row["規格"]);
 }
 
 function text(value) {
@@ -171,6 +194,11 @@ async function loadData() {
   state.docChecks = objectMapToRows(loaded.docChecks, "文件核對");
   state.docTracks = objectMapToRows(loaded.docTracks, "文件追蹤");
   state.shipments = objectMapToRows(loaded.shipments, "船班");
+  state.salesQuoteMap = new Map(
+    loaded.sales
+      .filter((row) => Array.isArray(row))
+      .map((row) => [productKeyFromValues(row[0], row[2], row[4]), row[15]])
+  );
 }
 
 function renderDashboard() {
@@ -186,6 +214,9 @@ function renderDashboard() {
   if (can("cashflow")) {
     metrics.splice(2, 0, ["現金流", state.cashflow.length]);
     metrics.push(["應收台幣", money(receivable)], ["應付台幣", money(payable)]);
+  }
+  if (can("orderAnalysis")) {
+    metrics.splice(2, 0, ["訂單分析", new Set(state.cashflow.map((row) => row.po).filter(Boolean)).size]);
   }
   $("metricGrid").innerHTML = metrics
     .map(([label, value]) => `<div class="metric"><span>${label}</span><strong>${value}</strong></div>`)
@@ -216,7 +247,9 @@ function renderProducts() {
           <td><span class="pill">${escapeHtml(row["型態"])}</span></td>
           <td>${escapeHtml(row["產品類別"])}</td>
           <td>${escapeHtml(row["幣別"])}</td>
-          <td class="num">${escapeHtml(mask(money(row["成本價"])))}</td>
+          <td class="num" data-column="cost">${escapeHtml(mask(money(row["成本價"])))}</td>
+          <td class="num" data-column="quote">${can("quote") ? money(state.salesQuoteMap.get(productKey(row))) : "權限不足"}</td>
+          <td class="num" data-column="quoteFloor">${can("quoteFloor") ? money(row["外幣10%底線"]) : "權限不足"}</td>
           <td>${escapeHtml(row["狀態"])}</td>
         </tr>
       `
@@ -244,6 +277,38 @@ function renderSuppliers() {
           <td>${escapeHtml(row["交易模式"])}</td>
           <td>${escapeHtml(row["付款條件"])}</td>
           <td class="num">${money(row["產品筆數"])}</td>
+        </tr>
+      `
+    )
+    .join("");
+}
+
+function renderOrderAnalysis() {
+  if (!can("orderAnalysis")) {
+    $("orderAnalysisBody").innerHTML = "";
+    return;
+  }
+  const keyword = $("orderSearch").value;
+  const month = $("orderMonthFilter").value;
+  const rows = state.cashflow.filter(
+    (row) =>
+      (!month || row.ym === month) &&
+      includesAny(row, keyword, ["po", "counterpart", "supplier", "customer", "product", "mode", "pay_nature"])
+  );
+  $("orderAnalysisBody").innerHTML = rows
+    .map(
+      (row) => `
+        <tr>
+          <td>${escapeHtml(row.po)}</td>
+          <td>${escapeHtml(row.ym)}</td>
+          <td><span class="pill ${row.type === "應收" ? "in" : "out"}">${escapeHtml(row.type)}</span></td>
+          <td>${escapeHtml(row.customer)}</td>
+          <td>${escapeHtml(row.supplier)}</td>
+          <td>${escapeHtml(row.product)}</td>
+          <td>${escapeHtml(row.mode)}</td>
+          <td>${escapeHtml(row.pay_nature)}</td>
+          <td>${escapeHtml(row.date_est)}</td>
+          <td>${row.confirmed ? "已確認" : "未確認"}</td>
         </tr>
       `
     )
@@ -346,16 +411,22 @@ function renderTracking() {
 }
 
 function renderAll() {
-  applyPermissions();
   renderDashboard();
   renderProducts();
   renderSuppliers();
+  renderOrderAnalysis();
   renderCashflow();
   renderTracking();
+  applyPermissions();
 }
 
 function setView(view) {
-  if (view === "cashflow" && !can("cashflow")) {
+  if (
+    (view === "cashflow" && !can("cashflow")) ||
+    (view === "orderAnalysis" && !can("orderAnalysis")) ||
+    (view === "suppliers" && !can("suppliers")) ||
+    (view === "tracking" && !can("tracking"))
+  ) {
     view = "dashboard";
   }
   document.querySelectorAll(".nav-item").forEach((button) => button.classList.toggle("active", button.dataset.view === view));
@@ -372,6 +443,7 @@ function bindEvents() {
   $("logoutBtn").addEventListener("click", logout);
   ["productSearch", "productTypeFilter", "productStatusFilter"].forEach((id) => $(id).addEventListener("input", renderProducts));
   ["supplierSearch", "supplierTypeFilter"].forEach((id) => $(id).addEventListener("input", renderSuppliers));
+  ["orderSearch", "orderMonthFilter"].forEach((id) => $(id).addEventListener("input", renderOrderAnalysis));
   ["cashflowSearch", "cashflowTypeFilter", "cashflowCurrencyFilter"].forEach((id) => $(id).addEventListener("input", renderCashflow));
   $("trackingSearch").addEventListener("input", renderTracking);
 }
@@ -381,6 +453,9 @@ function applyPermissions() {
     const permission = element.dataset.permission;
     element.classList.toggle("hidden", !can(permission));
   });
+  document.querySelectorAll('[data-column="cost"]').forEach((element) => element.classList.toggle("hidden", !can("costs")));
+  document.querySelectorAll('[data-column="quote"]').forEach((element) => element.classList.toggle("hidden", !can("quote")));
+  document.querySelectorAll('[data-column="quoteFloor"]').forEach((element) => element.classList.toggle("hidden", !can("quoteFloor")));
   $("userChip").textContent = `${state.currentUser.name}｜${state.currentUser.roleLabel}`;
 }
 
@@ -426,6 +501,7 @@ async function init() {
     $("productTypeFilter").innerHTML = uniqueOptions(state.products, "型態", "全部型態");
     $("productStatusFilter").innerHTML = uniqueOptions(state.products, "狀態", "全部狀態");
     $("supplierTypeFilter").innerHTML = uniqueOptions(state.suppliers, "型態", "全部型態");
+    $("orderMonthFilter").innerHTML = uniqueOptions(state.cashflow, "ym", "全部月份");
     $("cashflowTypeFilter").innerHTML = uniqueOptions(state.cashflow, "type", "全部類型");
     $("cashflowCurrencyFilter").innerHTML = uniqueOptions(state.cashflow, "currency", "全部幣別");
     restoreLogin();
