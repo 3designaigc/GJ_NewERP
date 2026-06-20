@@ -432,6 +432,18 @@ select {
   padding: 0 14px;
 }
 
+.project-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.project-card a.secondary-link {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--accent);
+}
+
 .project-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1162,6 +1174,10 @@ tbody tr:hover {
   .project-hero {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .project-actions {
+    grid-template-columns: 1fr;
   }
 
   .toolbar {
