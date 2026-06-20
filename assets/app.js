@@ -1144,8 +1144,21 @@ function setView(view) {
   $("viewSubtitle").textContent = subtitle;
 }
 
+function showProjectPreview(src, title) {
+  const frame = $("projectPreviewFrame");
+  if (!frame) return;
+  frame.src = src;
+  $("projectPreviewTitle").textContent = title || "HTML 展示";
+  document.querySelectorAll("[data-preview-html]").forEach((button) => {
+    button.classList.toggle("active-preview", button.dataset.previewHtml === src);
+  });
+}
+
 function bindEvents() {
   document.querySelectorAll(".nav-item").forEach((button) => button.addEventListener("click", () => setView(button.dataset.view)));
+  document.querySelectorAll("[data-preview-html]").forEach((button) => {
+    button.addEventListener("click", () => showProjectPreview(button.dataset.previewHtml, button.dataset.previewTitle));
+  });
   $("loginForm").addEventListener("submit", handleLogin);
   $("logoutBtn").addEventListener("click", logout);
   ["productSearch", "productTypeFilter", "productStatusFilter"].forEach((id) => $(id).addEventListener("input", renderProducts));
@@ -1299,6 +1312,7 @@ async function init() {
       populateFilters();
       renderAll();
     }
+    showProjectPreview("projects/newerp/html/sop_rolling_12_month_forecast.html", "月度出貨預測與實銷追蹤");
     $("loadStatus").textContent = "資料已載入";
     $("loadStatus").className = "status ok";
     $("viewSubtitle").textContent = "主檔資料量、交易模式與待辦狀態";

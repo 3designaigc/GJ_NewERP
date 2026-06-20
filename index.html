@@ -96,7 +96,7 @@
               <h3>S&OP、庫存與報價檔案中心</h3>
               <p>這裡集中目前正在整理的 NewERP 作業檔，先以 Excel 報表方式上線，後續再逐步接成系統模組。</p>
             </div>
-            <a class="project-primary-link" href="projects/newerp/html/whisky_cost_quote_twd.html" target="_blank" rel="noreferrer">開啟酒報價 HTML</a>
+            <button class="project-primary-link" type="button" data-preview-html="projects/newerp/html/whisky_cost_quote_twd.html" data-preview-title="酒類成本與台幣報價">開啟酒報價 HTML</button>
           </div>
 
           <div class="project-grid">
@@ -107,7 +107,7 @@
                 <p>業務每月填寫出貨預測，管理目標、實際出貨、實銷、達成率與預估準確率。</p>
               </div>
               <div class="project-actions">
-                <a href="projects/newerp/html/sop_rolling_12_month_forecast.html" target="_blank" rel="noreferrer">HTML 預覽</a>
+                <button type="button" data-preview-html="projects/newerp/html/sop_rolling_12_month_forecast.html" data-preview-title="月度出貨預測與實銷追蹤">HTML 預覽</button>
                 <a class="secondary-link" href="projects/newerp/files/sop_rolling_12_month_forecast.xlsx" download>下載 XLSX</a>
               </div>
             </article>
@@ -118,7 +118,7 @@
                 <p>可交給業務填寫的預測表版本，作為每月滾動更新資料來源。</p>
               </div>
               <div class="project-actions">
-                <a href="projects/newerp/html/sop_sales_product_monthly_forecast_template.html" target="_blank" rel="noreferrer">HTML 預覽</a>
+                <button type="button" data-preview-html="projects/newerp/html/sop_sales_product_monthly_forecast_template.html" data-preview-title="業務分產品每月預測範本">HTML 預覽</button>
                 <a class="secondary-link" href="projects/newerp/files/sop_sales_product_monthly_forecast_template.xlsx" download>下載 XLSX</a>
               </div>
             </article>
@@ -129,11 +129,19 @@
                 <p>依匯率、內陸成本、海運攤提、酒稅、營業稅與 8% 毛利率計算台幣報價。</p>
               </div>
               <div class="project-actions">
-                <a href="projects/newerp/html/whisky_cost_quote_twd.html" target="_blank" rel="noreferrer">HTML 預覽</a>
+                <button type="button" data-preview-html="projects/newerp/html/whisky_cost_quote_twd.html" data-preview-title="酒類成本與台幣報價">HTML 預覽</button>
                 <a class="secondary-link" href="projects/newerp/files/whisky_cost_quote_twd.xlsx" download>下載 XLSX</a>
               </div>
             </article>
           </div>
+
+          <section class="project-preview panel" id="projectPreview">
+            <div class="panel-head">
+              <h3 id="projectPreviewTitle">HTML 展示</h3>
+              <span class="muted">點上方任一 HTML 預覽後，報表會顯示在這裡。</span>
+            </div>
+            <iframe id="projectPreviewFrame" title="NewERP HTML preview"></iframe>
+          </section>
         </section>
 
         <section id="salesQuoteView" class="view">

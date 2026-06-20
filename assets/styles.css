@@ -418,14 +418,17 @@ select {
 }
 
 .project-primary-link,
-.project-card a {
+.project-card a,
+.project-card button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 38px;
+  border: 0;
   border-radius: 6px;
   background: var(--accent);
   color: #ffffff;
+  cursor: pointer;
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
@@ -442,6 +445,32 @@ select {
   background: var(--surface);
   border: 1px solid var(--line);
   color: var(--accent);
+}
+
+.project-card button.active-preview,
+.project-primary-link.active-preview {
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.2);
+}
+
+.project-preview {
+  margin-top: 14px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.project-preview .panel-head {
+  margin: 0;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.project-preview iframe {
+  display: block;
+  width: 100%;
+  height: min(68vh, 760px);
+  min-height: 520px;
+  border: 0;
+  background: #ffffff;
 }
 
 .project-grid {
