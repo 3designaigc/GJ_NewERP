@@ -46,6 +46,7 @@
         </div>
         <nav class="nav" aria-label="主要功能">
           <button class="nav-item active" data-view="dashboard">總覽</button>
+          <button class="nav-item" data-view="projects">專案</button>
           <button class="nav-item" data-view="salesQuote" data-permission="quote">業務報價</button>
           <button class="nav-item" data-view="products">商品</button>
           <button class="nav-item" data-view="suppliers" data-permission="suppliers">供應商</button>
@@ -85,6 +86,44 @@
               </div>
               <div id="taskStatusList" class="bar-list"></div>
             </section>
+          </div>
+        </section>
+
+        <section id="projectsView" class="view">
+          <div class="project-hero panel">
+            <div>
+              <span class="pill in">NewERP</span>
+              <h3>S&OP、庫存與報價檔案中心</h3>
+              <p>這裡集中目前正在整理的 NewERP 作業檔，先以 Excel 報表方式上線，後續再逐步接成系統模組。</p>
+            </div>
+            <a class="project-primary-link" href="projects/newerp/files/whisky_cost_quote_twd.xlsx" download>下載酒報價檔</a>
+          </div>
+
+          <div class="project-grid">
+            <article class="project-card">
+              <div>
+                <span class="project-label">S&OP</span>
+                <h3>月度出貨預測與實銷追蹤</h3>
+                <p>業務每月填寫出貨預測，管理目標、實際出貨、實銷、達成率與預估準確率。</p>
+              </div>
+              <a href="projects/newerp/files/sop_rolling_12_month_forecast.xlsx" download>下載 Excel</a>
+            </article>
+            <article class="project-card">
+              <div>
+                <span class="project-label">Template</span>
+                <h3>業務分產品每月預測範本</h3>
+                <p>可交給業務填寫的預測表版本，作為每月滾動更新資料來源。</p>
+              </div>
+              <a href="projects/newerp/files/sop_sales_product_monthly_forecast_template.xlsx" download>下載 Excel</a>
+            </article>
+            <article class="project-card">
+              <div>
+                <span class="project-label">Whisky</span>
+                <h3>酒類成本與台幣報價</h3>
+                <p>依匯率、內陸成本、海運攤提、酒稅、營業稅與 8% 毛利率計算台幣報價。</p>
+              </div>
+              <a href="projects/newerp/files/whisky_cost_quote_twd.xlsx" download>下載 Excel</a>
+            </article>
           </div>
         </section>
 

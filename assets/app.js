@@ -155,6 +155,7 @@ const procurementModeConfig = {
 
 const viewMeta = {
   dashboard: ["總覽", "主檔資料量、交易模式與待辦狀態"],
+  projects: ["專案", "NewERP 作業檔案與階段成果"],
   salesQuote: ["業務報價", "挑選商品、建立報價單並送出訂單草稿"],
   products: ["商品", "商品主檔、成本、狀態與報價基礎"],
   suppliers: ["供應商", "供應商條件、聯絡與付款基礎資料"],
